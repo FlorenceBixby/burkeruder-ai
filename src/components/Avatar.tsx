@@ -19,142 +19,147 @@ export default function Avatar() {
           border: "1px solid var(--sand)", overflow: "hidden",
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          <svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+          {/*
+            Proportions: 200 wide × 240 tall
+            Head center: (100, 128) radius 52×56 — fills the frame
+            Cap sits on top from ~y=72 up to y=38
+            Shirt is a sliver at the very bottom (y=190+)
+          */}
+          <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
             <defs>
               <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#B8D8D6" />
-                <stop offset="55%" stopColor="#7FB5B0" />
-                <stop offset="100%" stopColor="#1B3A4B" />
+                <stop offset="0%" stopColor="#C8DFE0" />
+                <stop offset="60%" stopColor="#8EC4C0" />
+                <stop offset="100%" stopColor="#2A5568" />
               </linearGradient>
               <linearGradient id="skin" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#D4956A" />
-                <stop offset="100%" stopColor="#B87044" />
+                <stop offset="0%" stopColor="#D8956A" />
+                <stop offset="100%" stopColor="#B8703E" />
+              </linearGradient>
+              <linearGradient id="capTop" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#E03030" />
+                <stop offset="100%" stopColor="#B82020" />
+              </linearGradient>
+              <linearGradient id="capCuff" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#8B1A14" />
+                <stop offset="100%" stopColor="#6B1210" />
+              </linearGradient>
+              <linearGradient id="lens" x1="0%" y1="30%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#222833" />
+                <stop offset="100%" stopColor="#111520" />
+              </linearGradient>
+              <linearGradient id="beard" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#3A1E0C" />
+                <stop offset="100%" stopColor="#241208" />
               </linearGradient>
               <linearGradient id="shirt" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#2A5568" />
-                <stop offset="100%" stopColor="#1B3A4B" />
+                <stop offset="0%" stopColor="#7BAEC8" />
+                <stop offset="100%" stopColor="#5A8EAA" />
               </linearGradient>
               <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#FFE566" />
                 <stop offset="50%" stopColor="#D4AF37" />
                 <stop offset="100%" stopColor="#9A7B20" />
               </linearGradient>
-              <linearGradient id="beanie" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#E84040" />
-                <stop offset="100%" stopColor="#A93226" />
-              </linearGradient>
-              <linearGradient id="lens" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#1C2333" />
-                <stop offset="100%" stopColor="#0D1219" />
-              </linearGradient>
-              <linearGradient id="beard" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#3B2010" />
-                <stop offset="100%" stopColor="#2A150A" />
-              </linearGradient>
             </defs>
 
             {/* ── BACKGROUND ── */}
-            <rect width="200" height="230" fill="url(#bg)" />
-            <path d="M0 190 Q50 178 100 190 Q150 202 200 190 L200 230 L0 230 Z" fill="#1B3A4B" opacity="0.7" />
-            <path d="M0 205 Q50 193 100 205 Q150 217 200 205 L200 230 L0 230 Z" fill="#152E3E" />
+            <rect width="200" height="240" fill="url(#bg)" />
+            {/* Subtle horizon line */}
+            <rect x="0" y="205" width="200" height="35" fill="#1B3A4B" opacity="0.6" />
+            <path d="M0 205 Q100 198 200 205" stroke="#7BAEC8" strokeWidth="1" fill="none" opacity="0.4" />
 
-            {/* ── SHIRT — wide open collar, sits low ── */}
-            <path d="M20 230 L40 168 Q60 155 100 158 Q140 155 160 168 L180 230 Z" fill="url(#shirt)" />
-            {/* Collar V — wide and low */}
-            <path d="M82 160 Q100 178 118 160" stroke="#1B3A4B" strokeWidth="3" fill="none" />
-            {/* Collar edges */}
-            <path d="M82 160 Q75 162 70 168" stroke="#2A5568" strokeWidth="2" fill="none" opacity="0.8" />
-            <path d="M118 160 Q125 162 130 168" stroke="#2A5568" strokeWidth="2" fill="none" opacity="0.8" />
-            {/* Zissou red chest stripe */}
-            <path d="M38 185 Q100 180 162 185 L164 192 Q100 187 36 192 Z" fill="#C0392B" opacity="0.9" />
+            {/* ── ZISSOU POWDER BLUE SHIRT — just visible at bottom ── */}
+            <path d="M0 240 L0 210 Q30 200 100 200 Q170 200 200 210 L200 240 Z" fill="url(#shirt)" />
+            {/* Shirt collar — V-neck, small */}
+            <path d="M86 202 L100 214 L114 202" fill="url(#shirt)" stroke="#5A8EAA" strokeWidth="1.5" />
+            {/* Zissou uniform patch area */}
+            <rect x="62" y="215" width="36" height="16" rx="2" fill="#5A8EAA" opacity="0.5" />
+            <text x="80" y="226" textAnchor="middle" fill="white" fontSize="5.5" fontFamily="Courier New" letterSpacing="0.5" opacity="0.85">ZISSOU</text>
+            {/* Red shoulder stripe — Life Aquatic uniform detail */}
+            <path d="M0 210 Q30 202 50 204 L50 210 Q30 208 0 216 Z" fill="#C0392B" opacity="0.8" />
+            <path d="M200 210 Q170 202 150 204 L150 210 Q170 208 200 216 Z" fill="#C0392B" opacity="0.8" />
 
-            {/* ── GOLD CHAINS — sit on chest, well below face ── */}
-            <path d="M62 168 Q68 180 80 186 Q90 192 100 190 Q110 192 120 186 Q132 180 138 168" stroke="url(#gold)" strokeWidth="4" fill="none" strokeLinecap="round" />
-            <path d="M55 172 Q58 188 72 196 Q86 204 100 202 Q114 204 128 196 Q142 188 145 172" stroke="url(#gold)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-            <path d="M50 178 Q50 197 66 207 Q83 217 100 215 Q117 217 134 207 Q150 197 150 178" stroke="url(#gold)" strokeWidth="3" fill="none" strokeLinecap="round" />
-            {/* Chain link accents */}
-            {[[80,187],[100,191],[120,187],[72,197],[100,203],[128,197],[66,208],[100,216],[134,208]].map(([x,y],i) => (
-              <circle key={i} cx={x} cy={y} r="2.5" fill="#FFE566" opacity="0.9" />
-            ))}
-            {/* ETH pendant */}
-            <polygon points="100,214 93,222 100,219 107,222" fill="url(#gold)" />
-            <polygon points="100,229 93,222 100,225 107,222" fill="#C8991C" />
-            <line x1="100" y1="210" x2="100" y2="215" stroke="#D4AF37" strokeWidth="2" />
-            {/* Sparkles */}
-            {[[80,187],[120,187],[100,215]].map(([x,y],i) => (
+            {/* ── GOLD CHAINS ── */}
+            <path d="M58 196 Q68 188 82 186 Q91 184 100 184 Q109 184 118 186 Q132 188 142 196" stroke="url(#gold)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+            <path d="M50 204 Q62 192 78 189 Q89 186 100 185 Q111 186 122 189 Q138 192 150 204" stroke="url(#gold)" strokeWidth="3" fill="none" strokeLinecap="round" />
+            {/* Chain sparkles */}
+            {[[82,186],[100,184],[118,186],[78,190],[122,190]].map(([x,y],i) => (
               <g key={i}>
-                <line x1={x} y1={y-4} x2={x} y2={y+4} stroke="white" strokeWidth="1" opacity="0.6" />
-                <line x1={x-4} y1={y} x2={x+4} y2={y} stroke="white" strokeWidth="1" opacity="0.6" />
+                <line x1={x} y1={y-3} x2={x} y2={y+3} stroke="white" strokeWidth="0.8" opacity="0.7" />
+                <line x1={x-3} y1={y} x2={x+3} y2={y} stroke="white" strokeWidth="0.8" opacity="0.7" />
               </g>
             ))}
 
             {/* ── NECK ── */}
-            <rect x="86" y="150" width="28" height="14" rx="4" fill="#C07848" />
+            <path d="M88 192 Q88 200 100 202 Q112 200 112 192 Q112 186 100 185 Q88 186 88 192 Z" fill="#C07848" />
 
-            {/* ── FACE ── */}
-            <ellipse cx="100" cy="115" rx="40" ry="44" fill="url(#skin)" />
+            {/* ── FACE — big, fills the frame ── */}
+            <ellipse cx="100" cy="130" rx="52" ry="58" fill="url(#skin)" />
 
-            {/* Ears */}
-            <ellipse cx="60" cy="115" rx="9" ry="12" fill="#C07848" />
-            <ellipse cx="140" cy="115" rx="9" ry="12" fill="#C07848" />
-            <ellipse cx="60" cy="115" rx="5.5" ry="8" fill="#D4956A" opacity="0.4" />
-            <ellipse cx="140" cy="115" rx="5.5" ry="8" fill="#D4956A" opacity="0.4" />
+            {/* Face shadow — left side depth */}
+            <ellipse cx="72" cy="130" rx="18" ry="40" fill="#A06030" opacity="0.15" />
 
-            {/* ── BEARD — short/trimmed dark stubble ── */}
-            {/* Main beard — trimmed close, ends well above chin */}
-            <path d="M67 128 Q66 135 68 142 Q76 152 100 154 Q124 152 132 142 Q134 135 133 128 Q124 122 100 120 Q76 122 67 128 Z" fill="url(#beard)" />
-            {/* Sideburn fade */}
-            <path d="M67 128 Q70 120 76 117 Q82 115 88 115 Q87 121 83 126 Q76 128 70 130 Z" fill="#3B2010" opacity="0.65" />
-            <path d="M133 128 Q130 120 124 117 Q118 115 112 115 Q113 121 117 126 Q124 128 130 130 Z" fill="#3B2010" opacity="0.65" />
+            {/* ── EARS — positioned at widest point of face ── */}
+            <ellipse cx="48" cy="128" rx="10" ry="13" fill="#C07848" />
+            <ellipse cx="152" cy="128" rx="10" ry="13" fill="#C07848" />
+            <ellipse cx="48" cy="128" rx="6" ry="9" fill="#D4956A" opacity="0.35" />
+            <ellipse cx="152" cy="128" rx="6" ry="9" fill="#D4956A" opacity="0.35" />
+
+            {/* ── BEARD — short, trimmed ── */}
+            {/* Sideburns */}
+            <path d="M50 128 Q52 120 58 116 Q64 112 72 112 Q70 120 66 128 Q60 132 54 132 Z" fill="url(#beard)" opacity="0.8" />
+            <path d="M150 128 Q148 120 142 116 Q136 112 128 112 Q130 120 134 128 Q140 132 146 132 Z" fill="url(#beard)" opacity="0.8" />
+            {/* Jaw beard — short, only covers lower jaw/chin */}
+            <path d="M56 138 Q54 148 58 158 Q68 170 100 172 Q132 170 142 158 Q146 148 144 138 Q136 132 100 130 Q64 132 56 138 Z" fill="url(#beard)" />
             {/* Mustache */}
-            <path d="M86 130 Q100 133 114 130 Q112 126 100 125 Q88 126 86 130 Z" fill="#2A150A" opacity="0.85" />
-            {/* Beard texture lines */}
-            {[87,93,100,107,113].map((x,i) => (
-              <line key={i} x1={x} y1={122} x2={x + (x < 100 ? -1 : x > 100 ? 1 : 0)} y2={135} stroke="#1A0C04" strokeWidth="0.8" opacity="0.3" />
+            <path d="M82 140 Q91 143 100 143 Q109 143 118 140 Q116 134 100 133 Q84 134 82 140 Z" fill="#2A1208" opacity="0.9" />
+            {/* Short beard texture */}
+            {[82,90,100,110,118].map((x,i) => (
+              <line key={i} x1={x} y1={132} x2={x+(x<100?-1:x>100?1:0)} y2={148} stroke="#1A0A04" strokeWidth="0.9" opacity="0.25" />
             ))}
 
-            {/* ── NOSE ── */}
-            <ellipse cx="100" cy="122" rx="6" ry="5" fill="#A0694A" />
-            <circle cx="97" cy="121" r="2" fill="#8B5C3C" />
-            <circle cx="103" cy="121" r="2" fill="#8B5C3C" />
+            {/* ── NOSE — Zissou-style prominent ── */}
+            <path d="M94 130 Q92 142 94 148 Q100 152 106 148 Q108 142 106 130" fill="#B8703E" opacity="0.6" />
+            <ellipse cx="100" cy="147" rx="8" ry="5" fill="#A06030" />
+            <circle cx="96" cy="146" r="2.5" fill="#8B5230" />
+            <circle cx="104" cy="146" r="2.5" fill="#8B5230" />
 
-            {/* ── RAY-BAN WAYFARERS — iconic shape, thick plastic frames ── */}
-            {/* Left lens — true Wayfarer: top edge angled up from outside, thick frame */}
-            <path d="M61 101 L62 96 Q66 92 76 91 L93 91 Q96 91 97 95 L97 112 Q97 116 93 117 L65 117 Q61 116 61 112 Z" fill="url(#lens)" />
-            <path d="M61 101 L62 96 Q66 92 76 91 L93 91 Q96 91 97 95 L97 112 Q97 116 93 117 L65 117 Q61 116 61 112 Z" fill="none" stroke="#111" strokeWidth="3" />
+            {/* ── RAY-BAN WAYFARERS ── */}
+            {/* Left lens — Wayfarer shape: top wider, slight angle on outer top corner */}
+            <path d="M50 112 L52 106 Q58 100 70 99 L94 99 Q98 100 98 105 L98 120 Q98 124 94 125 L56 125 Q50 124 50 118 Z" fill="url(#lens)" />
+            <path d="M50 112 L52 106 Q58 100 70 99 L94 99 Q98 100 98 105 L98 120 Q98 124 94 125 L56 125 Q50 124 50 118 Z" fill="none" stroke="#0D0D0D" strokeWidth="3.5" />
             {/* Right lens */}
-            <path d="M103 91 L120 91 Q130 92 138 96 L139 101 L139 112 Q139 116 135 117 L107 117 Q103 116 103 112 Z" fill="url(#lens)" />
-            <path d="M103 91 L120 91 Q130 92 138 96 L139 101 L139 112 Q139 116 135 117 L107 117 Q103 116 103 112 Z" fill="none" stroke="#111" strokeWidth="3" />
+            <path d="M102 99 L130 99 Q142 100 148 106 L150 112 L150 118 Q150 124 144 125 L106 125 Q102 124 102 120 Z" fill="url(#lens)" />
+            <path d="M102 99 L130 99 Q142 100 148 106 L150 112 L150 118 Q150 124 144 125 L106 125 Q102 124 102 120 Z" fill="none" stroke="#0D0D0D" strokeWidth="3.5" />
             {/* Nose bridge */}
-            <path d="M97 101 Q100 99 103 101 Q103 105 100 106 Q97 105 97 101 Z" fill="#1A1A1A" />
-            {/* Temple arms — end at ear, don't pass through */}
-            <path d="M61 106 L61 110 Q62 112 65 112 Q67 112 69 110 L69 106 Z" fill="#1A1A1A" />
-            <path d="M139 106 L139 110 Q138 112 135 112 Q133 112 131 110 L131 106 Z" fill="#1A1A1A" />
-            {/* Lens glint — classic RB */}
-            <path d="M66 96 Q78 94 90 97 Q88 101 76 101 Q66 100 66 96 Z" fill="white" opacity="0.1" />
-            <path d="M108 96 Q120 94 132 97 Q130 101 118 101 Q108 100 108 96 Z" fill="white" opacity="0.1" />
+            <path d="M98 108 Q100 105 102 108 L102 115 Q100 117 98 115 Z" fill="#0D0D0D" />
+            {/* Temple stubs — sit against ear, not through */}
+            <rect x="48" y="110" width="4" height="10" rx="2" fill="#0D0D0D" />
+            <rect x="148" y="110" width="4" height="10" rx="2" fill="#0D0D0D" />
+            {/* Lens glint */}
+            <path d="M56 104 Q68 101 88 104 Q86 109 68 109 Q56 108 56 104 Z" fill="white" opacity="0.09" />
+            <path d="M108 104 Q126 101 142 104 Q140 109 124 109 Q108 108 108 104 Z" fill="white" opacity="0.09" />
 
-            {/* ── EYES — barely visible above glasses ── */}
-            {/* Just eyebrows — very Wes Anderson */}
-            <rect x="68" y="86" width="20" height="3.5" rx="1.5" fill="#2C1A0E" transform="rotate(-4,78,87)" />
-            <rect x="112" y="86" width="20" height="3.5" rx="1.5" fill="#2C1A0E" transform="rotate(4,122,87)" />
+            {/* ── EYEBROWS — above glasses, Wes Anderson flat ── */}
+            <rect x="56" y="94" width="28" height="4" rx="2" fill="#2C1A0E" transform="rotate(-3,70,96)" />
+            <rect x="116" y="94" width="28" height="4" rx="2" fill="#2C1A0E" transform="rotate(3,130,96)" />
 
-            {/* ── BEANIE — fitted Life Aquatic red dome ── */}
-            {/* Main dome */}
-            <path d="M62 88 Q62 44 100 42 Q138 44 138 88 Z" fill="url(#beanie)" />
-            {/* Shadow on right side of dome */}
-            <path d="M118 44 Q138 52 138 88 L128 88 Q130 62 118 50 Z" fill="#8B2318" opacity="0.4" />
-            {/* Knit lines */}
-            {[78,88,100,112,122].map((x,i) => (
-              <line key={i} x1={x} y1={i===2?42:44} x2={x + (x<100?-3:x>100?3:0)} y2={87} stroke="#8B2318" strokeWidth="1" opacity="0.25" />
-            ))}
-            {/* Folded cuff */}
-            <rect x="62" y="80" width="76" height="14" rx="3" fill="#7B1C14" />
-            <rect x="62" y="80" width="76" height="7" rx="3" fill="#9B2318" />
-            <line x1="64" y1="87" x2="136" y2="87" stroke="#C0392B" strokeWidth="0.8" opacity="0.5" />
-            {/* Zissou diamond logo */}
-            <polygon points="100,58 105,53 110,58 105,63" fill="white" opacity="0.9" />
-            <polygon points="100,58 105,53 110,58 105,63" fill="none" stroke="#ddd" strokeWidth="0.5" />
+            {/* ── BEANIE — tight fitted Zissou cap ── */}
+            {/* Main dome — hugs the skull tightly */}
+            <path d="M50 78 Q50 36 100 34 Q150 36 150 78 Z" fill="url(#capTop)" />
+            {/* Right side shadow on dome */}
+            <path d="M124 36 Q150 48 150 78 L138 78 Q140 56 124 44 Z" fill="#8B1A10" opacity="0.35" />
+            {/* Subtle knit rows */}
+            <path d="M52 68 Q100 65 148 68" stroke="#8B1A10" strokeWidth="0.8" fill="none" opacity="0.3" />
+            <path d="M54 58 Q100 55 146 58" stroke="#8B1A10" strokeWidth="0.8" fill="none" opacity="0.25" />
+            <path d="M60 48 Q100 45 140 48" stroke="#8B1A10" strokeWidth="0.8" fill="none" opacity="0.2" />
+            {/* Rolled cuff band */}
+            <rect x="50" y="70" width="100" height="16" rx="3" fill="url(#capCuff)" />
+            <rect x="50" y="70" width="100" height="8" rx="3" fill="#9B2218" opacity="0.7" />
+            <line x1="52" y1="78" x2="148" y2="78" stroke="#C0392B" strokeWidth="0.8" opacity="0.4" />
+            {/* Zissou diamond badge */}
+            <polygon points="100,50 106,44 112,50 106,56" fill="white" opacity="0.92" />
           </svg>
         </div>
       </div>
