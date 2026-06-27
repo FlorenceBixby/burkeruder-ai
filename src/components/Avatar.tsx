@@ -84,13 +84,13 @@ export default function Avatar() {
             {/* Fill down to cover forehead gap */}
             <rect x="60" y="76" width="80" height="30" fill="url(#beanieGrad)" />
             {/* Cuff band — covers the base of the beanie, sits on forehead */}
-            <rect x="60" y="86" width="80" height="13" rx="4" fill="#15803D" />
-            <rect x="63" y="90" width="74" height="5" rx="2" fill="#16A34A" opacity="0.5" />
+            <rect x="60" y="86" width="80" height="13" rx="4" fill="#922B21" />
+            <rect x="63" y="90" width="74" height="5" rx="2" fill="#C0392B" opacity="0.5" />
             {/* Slouch flap drooping to the right */}
             <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="url(#beanieShadow)" />
-            <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="#22C55E" opacity="0.7" />
+            <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="#E84040" opacity="0.7" />
             {/* Tip of slouch */}
-            <path d="M142 86 Q150 90 155 82 Q158 74 152 70 Q155 80 148 84 Q145 86 142 86 Z" fill="#15803D" />
+            <path d="M142 86 Q150 90 155 82 Q158 74 152 70 Q155 80 148 84 Q145 86 142 86 Z" fill="#922B21" />
             {/* White Zissou diamond patch on front */}
             <polygon points="100,54 105,49 110,54 105,59" fill="white" opacity="0.85" stroke="#ddd" strokeWidth="0.5" />
 
