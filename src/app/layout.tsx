@@ -6,10 +6,10 @@ import CurtainReveal from "@/components/CurtainReveal";
 
 export const metadata: Metadata = {
   title: "Burke Ruder — The Curious Case",
-  description: "Security engineer, cloud builder, and tinkerer of curious things. Welcome to the laboratory.",
+  description: "Reader, photographer, tinkerer, and enthusiastic student of everything. Welcome to the laboratory.",
   openGraph: {
     title: "Burke Ruder — The Curious Case",
-    description: "Security engineer, cloud builder, and tinkerer of curious things.",
+    description: "Reader, photographer, tinkerer, and enthusiastic student of everything.",
     url: "https://burkeruder.ai",
   },
 };

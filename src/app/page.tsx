@@ -125,19 +125,20 @@ export default function Home() {
             </div>
 
             <p style={{ lineHeight: 1.9, fontSize: "1rem", color: "var(--fg)", marginBottom: "20px" }}>
-              Burke Ruder is an enterprise cybersecurity and cloud professional based in Austin, Texas —
-              a city known for its peculiar heat, its live music, and its tolerance for people who spend
-              weekends building things that may or may not ever see the light of production.
+              Burke Ruder is a perpetually curious person based in Austin, Texas — a city known for its
+              peculiar heat, its live music, and its tolerance for people who spend weekends building
+              things that may or may not ever see the light of production.
             </p>
             <p style={{ lineHeight: 1.9, fontSize: "1rem", color: "var(--fg)", marginBottom: "20px" }}>
-              By day, he navigates the labyrinthine corridors of enterprise security and cloud infrastructure,
-              armed with certifications, a calm demeanor, and an unusually deep knowledge of threat vectors.
-              By night, he is a tinkerer — a builder of curious digital contraptions, a student of systems,
-              and an enthusiastic subscriber to the Zissou school of exploration: go in underprepared,
-              document everything, and hope the submarine holds.
+              He reads voraciously — mostly non-fiction, the kind that rewires how you think about
+              business, systems, and human behavior. He shoots with a Canon, chasing light in the
+              way that only someone who genuinely loves the craft does. And he has a well-documented
+              inability to walk past an interesting new subject without wanting to understand it
+              completely.
             </p>
             <p style={{ lineHeight: 1.9, fontSize: "1rem", color: "var(--fg)" }}>
-              This website is his laboratory. Welcome aboard.
+              This website is his laboratory. New experiences, half-finished projects, and the occasional
+              thing that actually works. Welcome aboard.
             </p>
 
             <div style={{ textAlign: "center", marginTop: "28px" }}>
