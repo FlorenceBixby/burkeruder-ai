@@ -56,10 +56,6 @@ export default function Avatar() {
                 <stop offset="60%" stopColor="#C0392B" />
                 <stop offset="100%" stopColor="#922B21" />
               </linearGradient>
-              <linearGradient id="beanieShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#A93226" />
-                <stop offset="100%" stopColor="#7B241C" />
-              </linearGradient>
             </defs>
 
             {/* Background */}
@@ -78,21 +74,24 @@ export default function Avatar() {
             <ellipse cx="63" cy="112" rx="5" ry="7" fill="#D4956A" opacity="0.45" />
             <ellipse cx="137" cy="112" rx="5" ry="7" fill="#D4956A" opacity="0.45" />
 
-            {/* ── SLOUCHY BEANIE — solid filled, drawn OVER the face top ── */}
-            {/* Main dome — solid green mass covering top of head */}
-            <ellipse cx="100" cy="80" rx="40" ry="38" fill="url(#beanieGrad)" />
-            {/* Fill down to cover forehead gap */}
-            <rect x="60" y="76" width="80" height="10" fill="url(#beanieGrad)" />
-            {/* Cuff band — covers the base of the beanie, sits on forehead */}
-            <rect x="60" y="86" width="80" height="13" rx="4" fill="#922B21" />
-            <rect x="63" y="90" width="74" height="5" rx="2" fill="#C0392B" opacity="0.5" />
-            {/* Slouch flap drooping to the right */}
-            <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="url(#beanieShadow)" />
-            <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="#E84040" opacity="0.7" />
-            {/* Tip of slouch */}
-            <path d="M142 86 Q150 90 155 82 Q158 74 152 70 Q155 80 148 84 Q145 86 142 86 Z" fill="#922B21" />
-            {/* White Zissou diamond patch on front */}
-            <polygon points="100,54 105,49 110,54 105,59" fill="white" opacity="0.85" stroke="#ddd" strokeWidth="0.5" />
+            {/* ── LIFE AQUATIC BEANIE — fitted dome, folded cuff ── */}
+            {/* Dome — flat-topped, covers crown of head */}
+            <path d="M62 90 Q62 42 100 40 Q138 42 138 90 Z" fill="url(#beanieGrad)" />
+            {/* Slight flat top highlight */}
+            <ellipse cx="100" cy="42" rx="28" ry="6" fill="#E84040" opacity="0.5" />
+            {/* Knit texture lines */}
+            <line x1="80" y1="44" x2="76" y2="88" stroke="#A93226" strokeWidth="1" opacity="0.3" />
+            <line x1="90" y1="41" x2="88" y2="89" stroke="#A93226" strokeWidth="1" opacity="0.3" />
+            <line x1="100" y1="40" x2="100" y2="89" stroke="#A93226" strokeWidth="1" opacity="0.3" />
+            <line x1="110" y1="41" x2="112" y2="89" stroke="#A93226" strokeWidth="1" opacity="0.3" />
+            <line x1="120" y1="44" x2="124" y2="88" stroke="#A93226" strokeWidth="1" opacity="0.3" />
+            {/* Folded cuff — double layer at brim */}
+            <rect x="62" y="82" width="76" height="14" rx="3" fill="#7B241C" />
+            <rect x="62" y="82" width="76" height="7" rx="3" fill="#922B21" />
+            {/* Cuff fold line */}
+            <line x1="64" y1="89" x2="136" y2="89" stroke="#A93226" strokeWidth="0.8" opacity="0.6" />
+            {/* Zissou logo patch — small white diamond center front */}
+            <polygon points="100,60 104,56 108,60 104,64" fill="white" opacity="0.9" />
 
             {/* ── RAY-BAN WAYFARERS — on the eyes ── */}
             {/* Frame bridge */}
