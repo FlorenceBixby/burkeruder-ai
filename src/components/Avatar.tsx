@@ -82,7 +82,7 @@ export default function Avatar() {
             {/* Main dome — solid green mass covering top of head */}
             <ellipse cx="100" cy="80" rx="40" ry="38" fill="url(#beanieGrad)" />
             {/* Fill down to cover forehead gap */}
-            <rect x="60" y="76" width="80" height="30" fill="url(#beanieGrad)" />
+            <rect x="60" y="76" width="80" height="10" fill="url(#beanieGrad)" />
             {/* Cuff band — covers the base of the beanie, sits on forehead */}
             <rect x="60" y="86" width="80" height="13" rx="4" fill="#922B21" />
             <rect x="63" y="90" width="74" height="5" rx="2" fill="#C0392B" opacity="0.5" />
