@@ -52,13 +52,13 @@ export default function Avatar() {
                 <stop offset="100%" stopColor="#16213e" />
               </linearGradient>
               <linearGradient id="beanieGrad" x1="0%" y1="0%" x2="20%" y2="100%">
-                <stop offset="0%" stopColor="#4ADE80" />
-                <stop offset="60%" stopColor="#22C55E" />
-                <stop offset="100%" stopColor="#15803D" />
+                <stop offset="0%" stopColor="#E84040" />
+                <stop offset="60%" stopColor="#C0392B" />
+                <stop offset="100%" stopColor="#922B21" />
               </linearGradient>
               <linearGradient id="beanieShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#16A34A" />
-                <stop offset="100%" stopColor="#14532D" />
+                <stop offset="0%" stopColor="#A93226" />
+                <stop offset="100%" stopColor="#7B241C" />
               </linearGradient>
             </defs>
 
@@ -91,9 +91,8 @@ export default function Avatar() {
             <path d="M100 44 Q128 38 148 48 Q162 56 158 72 Q154 84 142 86 Q136 82 130 80 Q138 68 134 58 Q122 46 100 50 Z" fill="#22C55E" opacity="0.7" />
             {/* Tip of slouch */}
             <path d="M142 86 Q150 90 155 82 Q158 74 152 70 Q155 80 148 84 Q145 86 142 86 Z" fill="#15803D" />
-            {/* Red Zissou diamond patch on front */}
-            <polygon points="100,54 105,49 110,54 105,59" fill="#C0392B" />
-            <polygon points="100,54 105,49 110,54 105,59" fill="#C0392B" stroke="#8B1A1A" strokeWidth="0.5" />
+            {/* White Zissou diamond patch on front */}
+            <polygon points="100,54 105,49 110,54 105,59" fill="white" opacity="0.85" stroke="#ddd" strokeWidth="0.5" />
 
             {/* ── RAY-BAN WAYFARERS — on the eyes ── */}
             {/* Frame bridge */}
