@@ -100,19 +100,17 @@ export default function Avatar() {
             <ellipse cx="60" cy="115" rx="5.5" ry="8" fill="#D4956A" opacity="0.4" />
             <ellipse cx="140" cy="115" rx="5.5" ry="8" fill="#D4956A" opacity="0.4" />
 
-            {/* ── BEARD — full, short, dark brown ── */}
-            {/* Main beard mass covering jaw and chin */}
-            <path d="M63 128 Q62 138 64 148 Q72 162 100 164 Q128 162 136 148 Q138 138 137 128 Q128 122 100 120 Q72 122 63 128 Z" fill="url(#beard)" />
-            {/* Upper beard / sideburns blend into face */}
-            <path d="M63 128 Q66 120 72 117 Q80 114 88 114 Q88 120 84 126 Q76 128 68 130 Z" fill="#3B2010" opacity="0.7" />
-            <path d="M137 128 Q134 120 128 117 Q120 114 112 114 Q112 120 116 126 Q124 128 132 130 Z" fill="#3B2010" opacity="0.7" />
-            {/* Chin highlight */}
-            <ellipse cx="100" cy="158" rx="18" ry="6" fill="#2A150A" opacity="0.5" />
-            {/* Mustache area — separate darker strip above mouth */}
-            <path d="M84 130 Q100 133 116 130 Q114 125 100 124 Q86 125 84 130 Z" fill="#2A150A" opacity="0.8" />
+            {/* ── BEARD — short/trimmed dark stubble ── */}
+            {/* Main beard — trimmed close, ends well above chin */}
+            <path d="M67 128 Q66 135 68 142 Q76 152 100 154 Q124 152 132 142 Q134 135 133 128 Q124 122 100 120 Q76 122 67 128 Z" fill="url(#beard)" />
+            {/* Sideburn fade */}
+            <path d="M67 128 Q70 120 76 117 Q82 115 88 115 Q87 121 83 126 Q76 128 70 130 Z" fill="#3B2010" opacity="0.65" />
+            <path d="M133 128 Q130 120 124 117 Q118 115 112 115 Q113 121 117 126 Q124 128 130 130 Z" fill="#3B2010" opacity="0.65" />
+            {/* Mustache */}
+            <path d="M86 130 Q100 133 114 130 Q112 126 100 125 Q88 126 86 130 Z" fill="#2A150A" opacity="0.85" />
             {/* Beard texture lines */}
-            {[86,92,100,108,114].map((x,i) => (
-              <line key={i} x1={x} y1={122} x2={x + (x < 100 ? -2 : x > 100 ? 2 : 0)} y2={138} stroke="#1A0C04" strokeWidth="0.8" opacity="0.35" />
+            {[87,93,100,107,113].map((x,i) => (
+              <line key={i} x1={x} y1={122} x2={x + (x < 100 ? -1 : x > 100 ? 1 : 0)} y2={135} stroke="#1A0C04" strokeWidth="0.8" opacity="0.3" />
             ))}
 
             {/* ── NOSE ── */}
@@ -129,9 +127,9 @@ export default function Avatar() {
             <path d="M103 91 L120 91 Q130 92 138 96 L139 101 L139 112 Q139 116 135 117 L107 117 Q103 116 103 112 Z" fill="none" stroke="#111" strokeWidth="3" />
             {/* Nose bridge */}
             <path d="M97 101 Q100 99 103 101 Q103 105 100 106 Q97 105 97 101 Z" fill="#1A1A1A" />
-            {/* Temple arms */}
-            <path d="M61 106 Q54 106 52 110 Q54 112 61 110" fill="#1A1A1A" stroke="#111" strokeWidth="1.5" />
-            <path d="M139 106 Q146 106 148 110 Q146 112 139 110" fill="#1A1A1A" stroke="#111" strokeWidth="1.5" />
+            {/* Temple arms — end at ear, don't pass through */}
+            <path d="M61 106 L61 110 Q62 112 65 112 Q67 112 69 110 L69 106 Z" fill="#1A1A1A" />
+            <path d="M139 106 L139 110 Q138 112 135 112 Q133 112 131 110 L131 106 Z" fill="#1A1A1A" />
             {/* Lens glint — classic RB */}
             <path d="M66 96 Q78 94 90 97 Q88 101 76 101 Q66 100 66 96 Z" fill="white" opacity="0.1" />
             <path d="M108 96 Q120 94 132 97 Q130 101 118 101 Q108 100 108 96 Z" fill="white" opacity="0.1" />
