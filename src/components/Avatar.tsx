@@ -77,8 +77,6 @@ export default function Avatar() {
             {/* ── LIFE AQUATIC BEANIE — fitted dome, folded cuff ── */}
             {/* Dome — flat-topped, covers crown of head */}
             <path d="M62 90 Q62 42 100 40 Q138 42 138 90 Z" fill="url(#beanieGrad)" />
-            {/* Slight flat top highlight */}
-            <ellipse cx="100" cy="42" rx="28" ry="6" fill="#E84040" opacity="0.5" />
             {/* Knit texture lines */}
             <line x1="80" y1="44" x2="76" y2="88" stroke="#A93226" strokeWidth="1" opacity="0.3" />
             <line x1="90" y1="41" x2="88" y2="89" stroke="#A93226" strokeWidth="1" opacity="0.3" />
@@ -117,6 +115,21 @@ export default function Avatar() {
 
             {/* ── MOUTH — deadpan Wes Anderson flat smirk ── */}
             <path d="M88 138 Q100 141 112 137" stroke="#7A4A2C" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+
+            {/* ── BEARD — short dark stubble ── */}
+            {/* Main beard shape covering jaw/chin */}
+            <path d="M72 138 Q74 132 80 130 Q90 128 100 128 Q110 128 120 130 Q126 132 128 138 Q124 150 100 152 Q76 150 72 138 Z" fill="#3D2314" opacity="0.85" />
+            {/* Mustache area */}
+            <path d="M88 133 Q100 136 112 133 Q110 129 100 128 Q90 129 88 133 Z" fill="#3D2314" opacity="0.75" />
+            {/* Beard fade — lighter at cheeks */}
+            <path d="M72 138 Q74 132 80 130 Q76 136 74 144 Z" fill="#2C1A0E" opacity="0.4" />
+            <path d="M128 138 Q126 132 120 130 Q124 136 126 144 Z" fill="#2C1A0E" opacity="0.4" />
+            {/* Subtle stubble texture lines */}
+            <line x1="90" y1="130" x2="90" y2="134" stroke="#2C1A0E" strokeWidth="0.8" opacity="0.4" />
+            <line x1="95" y1="129" x2="95" y2="133" stroke="#2C1A0E" strokeWidth="0.8" opacity="0.4" />
+            <line x1="100" y1="128" x2="100" y2="132" stroke="#2C1A0E" strokeWidth="0.8" opacity="0.4" />
+            <line x1="105" y1="129" x2="105" y2="133" stroke="#2C1A0E" strokeWidth="0.8" opacity="0.4" />
+            <line x1="110" y1="130" x2="110" y2="134" stroke="#2C1A0E" strokeWidth="0.8" opacity="0.4" />
 
             {/* ── SHIRT — Zissou blue ── */}
             <path d="M58 155 Q66 140 100 142 Q134 140 142 155 L152 220 L48 220 Z" fill="#1B3A4B" />

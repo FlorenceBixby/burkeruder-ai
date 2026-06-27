@@ -7,14 +7,9 @@ import SocialLinks from "@/components/SocialLinks";
 import FloatingElements from "@/components/FloatingElements";
 
 const roles = [
-  "Enterprise Sales",
-  "Operations Guy",
-  "Procurement Nerd",
-  "Workflow Obsessive",
-  "Logistics Expert",
   "Curious Tinkerer",
-  "Zissou Enthusiast",
   "Builder of Things",
+  "Zissou Enthusiast",
 ];
 
 export default function Home() {
