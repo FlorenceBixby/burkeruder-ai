@@ -63,7 +63,7 @@ export default function Avatar() {
                 <stop offset="100%" stopColor="#16A34A" />
               </linearGradient>
               <filter id="chainGlow">
-                <feGlow stdDeviation="1" result="glow" />
+                <feGaussianBlur stdDeviation="1" result="glow" />
                 <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
