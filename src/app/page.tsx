@@ -33,7 +33,7 @@ export default function Home() {
           <div className="marquee-track" style={{ gap: "48px" }}>
             {Array(8).fill(null).map((_, i) => (
               <span key={i} style={{ fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--muted)", paddingRight: "48px" }}>
-                ◆ burkeruder.ai ◆ life aquatic ◆ austin, tx ◆ cybersecurity ◆ cloud ◆ tinkering
+                ◆ burkeruder.ai ◆ life aquatic ◆ austin, tx ◆ tinkering ◆ team zissou ◆ builder of things ◆ curious by nature
               </span>
             ))}
           </div>
