@@ -130,6 +130,13 @@ export default function Home() {
               things that may or may not ever see the light of production.
             </p>
             <p style={{ lineHeight: 1.9, fontSize: "1rem", color: "var(--fg)", marginBottom: "20px" }}>
+              By day, he consults organizations on how to defend against cyber attacks — armed with
+              certifications, a calm demeanor, and an unusually deep knowledge of threat vectors.
+              By night, he is a tinkerer — a builder of curious digital contraptions, a student of
+              systems, and an enthusiastic subscriber to the Zissou school of exploration: go in
+              underprepared, document everything, and hope the submarine holds.
+            </p>
+            <p style={{ lineHeight: 1.9, fontSize: "1rem", color: "var(--fg)", marginBottom: "20px" }}>
               He reads voraciously — mostly non-fiction, the kind that rewires how you think about
               business, systems, and human behavior. He shoots with a Canon, chasing light in the
               way that only someone who genuinely loves the craft does. And he has a well-documented
