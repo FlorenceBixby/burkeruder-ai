@@ -103,7 +103,7 @@ export default function Home() {
 
         <ChapterReveal delay={0.1}>
           <h2 className="chapter-title" style={{ marginTop: "20px", fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}>
-            A Man of Considerable Enterprise
+            A Man of Considerable Curiosity
           </h2>
         </ChapterReveal>
 
