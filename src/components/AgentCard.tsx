@@ -2,7 +2,63 @@
 import { motion } from "framer-motion";
 import { Agent } from "@/lib/agents";
 
-export default function AgentCard({ agent, index }: { agent: Agent; index: number }) {
+export interface AgentStatusEntry {
+  status: "ok" | "failing" | "deployed" | "unknown";
+  lastRun: string | null;
+}
+
+const statusConfig: Record<AgentStatusEntry["status"], { label: string; color: string }> = {
+  ok: { label: "Healthy", color: "#27AE60" },
+  failing: { label: "Failing", color: "var(--red-zissou)" },
+  deployed: { label: "Active", color: "var(--seafoam)" },
+  unknown: { label: "Unknown", color: "var(--muted)" },
+};
+
+function formatRelative(iso: string): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const minutes = Math.round(diffMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.round(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.round(days / 30);
+  return `${months}mo ago`;
+}
+
+function StatusPill({ agent, entry }: { agent: Agent; entry?: AgentStatusEntry }) {
+  if (agent.trigger === "concept") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px", marginTop: "8px" }}>
+        <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--seafoam)", display: "inline-block" }} />
+        <span style={{ fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)" }}>
+          Concept
+        </span>
+      </div>
+    );
+  }
+
+  const config = entry ? statusConfig[entry.status] : statusConfig.unknown;
+  const timeLabel = entry?.lastRun ? formatRelative(entry.lastRun) : null;
+  const verb = agent.source?.kind === "cloudflare-worker" ? "Deployed" : agent.trigger === "event-driven" ? "Last triggered" : "Last run";
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px", marginTop: "8px", flexWrap: "wrap" }}>
+      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: config.color, display: "inline-block" }} />
+      <span style={{ fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)" }}>
+        {agent.trigger === "event-driven" ? "Event-driven" : config.label}
+      </span>
+      {timeLabel && (
+        <span style={{ marginLeft: "auto", fontSize: "0.65rem", color: "var(--muted)" }}>
+          {verb} · {timeLabel}
+        </span>
+      )}
+    </div>
+  );
+}
+
+export default function AgentCard({ agent, index, status }: { agent: Agent; index: number; status?: AgentStatusEntry }) {
   return (
     <motion.div
       className="project-card"
@@ -28,20 +84,25 @@ export default function AgentCard({ agent, index }: { agent: Agent; index: numbe
         {agent.chapter}
       </div>
 
+      <StatusPill agent={agent} entry={status} />
+
       <h3 style={{
         fontFamily: "Georgia, serif",
         fontStyle: "italic",
         fontSize: "1.3rem",
         color: "var(--fg)",
-        marginTop: "20px",
         marginBottom: "10px",
         lineHeight: 1.2,
       }}>
         {agent.title}
       </h3>
 
-      <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--muted)" }}>
+      <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "var(--muted)", marginBottom: "12px" }}>
         {agent.description}
+      </p>
+
+      <p style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--seafoam)" }}>
+        {agent.cadence}
       </p>
 
       {/* Hover bottom bar */}
