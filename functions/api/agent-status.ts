@@ -1,13 +1,9 @@
-import { agents, type Agent, type AgentSource } from "../../src/lib/agents";
+import { agents, type Agent } from "../../src/lib/agents";
 
 interface Env {
   GITHUB_TOKEN: string;
   CF_API_TOKEN: string;
   CF_ACCOUNT_ID: string;
-  // JSON map of agent id -> AgentSource, for agents whose real repo/Worker
-  // name isn't safe to check into this public repo (kept out of src/lib/agents.ts
-  // and injected at runtime instead so it never ships in the client bundle).
-  AGENT_SOURCES?: string;
 }
 
 type Status = "ok" | "failing" | "deployed" | "unknown";
@@ -18,15 +14,6 @@ interface StatusEntry {
 }
 
 const CACHE_SECONDS = 300;
-
-function parsePrivateSources(raw: string | undefined): Record<string, AgentSource> {
-  if (!raw) return {};
-  try {
-    return JSON.parse(raw) as Record<string, AgentSource>;
-  } catch {
-    return {};
-  }
-}
 
 async function fetchGithubActionsStatus(
   repo: string,
@@ -71,18 +58,13 @@ async function fetchWorkerDeployStatus(
   return { status: modifiedOn ? "deployed" : "unknown", lastRun: modifiedOn };
 }
 
-async function resolveStatus(
-  agent: Agent,
-  env: Env,
-  privateSources: Record<string, AgentSource>
-): Promise<StatusEntry> {
-  const source = agent.source ?? privateSources[agent.id];
-  if (!source) return { status: "unknown", lastRun: null };
+async function resolveStatus(agent: Agent, env: Env): Promise<StatusEntry> {
+  if (!agent.source) return { status: "unknown", lastRun: null };
   try {
-    if (source.kind === "github-actions") {
-      return await fetchGithubActionsStatus(source.repo, source.workflow, env.GITHUB_TOKEN);
+    if (agent.source.kind === "github-actions") {
+      return await fetchGithubActionsStatus(agent.source.repo, agent.source.workflow, env.GITHUB_TOKEN);
     }
-    return await fetchWorkerDeployStatus(source.script, env.CF_ACCOUNT_ID, env.CF_API_TOKEN);
+    return await fetchWorkerDeployStatus(agent.source.script, env.CF_ACCOUNT_ID, env.CF_API_TOKEN);
   } catch {
     return { status: "unknown", lastRun: null };
   }
@@ -94,9 +76,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
 
-  const privateSources = parsePrivateSources(context.env.AGENT_SOURCES);
   const entries = await Promise.all(
-    agents.map(async (agent) => [agent.id, await resolveStatus(agent, context.env, privateSources)] as const)
+    agents.map(async (agent) => [agent.id, await resolveStatus(agent, context.env)] as const)
   );
   const result = Object.fromEntries(entries);
 

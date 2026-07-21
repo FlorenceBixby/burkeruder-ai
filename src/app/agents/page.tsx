@@ -9,8 +9,8 @@ import { agents } from "@/lib/agents";
 const legend = [
   { color: "#27AE60", label: "Healthy" },
   { color: "var(--red-zissou)", label: "Failing" },
-  { color: "var(--seafoam)", label: "Active / Event-driven" },
   { color: "var(--muted)", label: "Unknown" },
+  { color: "var(--seafoam)", label: "Concept" },
 ];
 
 export default function AgentsPage() {
@@ -53,7 +53,7 @@ export default function AgentsPage() {
           style={{ color: "var(--muted)", marginTop: "16px", fontSize: "0.9rem", letterSpacing: "0.05em", maxWidth: "560px", margin: "16px auto 0" }}
         >
           Everything running quietly below deck — the small crew of AI agents
-          handling inboxes, research, outreach, and upkeep so I don't have to.
+          handling my personal inboxes, research, and upkeep so I don't have to.
         </motion.p>
 
         <motion.div

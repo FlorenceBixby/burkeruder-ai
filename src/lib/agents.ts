@@ -14,6 +14,9 @@ export interface Agent {
   source?: AgentSource;
 }
 
+// Personal automations only (burke.ruder@gmail.com side). Anything doing work
+// on behalf of The Interesting Group lives on TIG's own ops dashboard instead —
+// keeps this site from double-counting agents that are already tracked there.
 export const agents: Agent[] = [
   {
     id: "inbox-custodian",
@@ -65,63 +68,9 @@ export const agents: Agent[] = [
     trigger: "concept",
   },
   {
-    id: "blog-correspondent",
-    title: "The Blog Correspondent",
-    chapter: "Exhibit Foxtrot",
-    description:
-      "Drafts and publishes blog content on a running schedule, keeping the lights on even when nobody's home.",
-    cadence: "Mon / Wed / Fri · 9am CT",
-    trigger: "scheduled",
-  },
-  {
-    id: "prospecting-machine",
-    title: "The Prospecting Machine",
-    chapter: "Exhibit Golf",
-    description:
-      "An end-to-end pipeline that finds prospects, scores them, drafts outreach, and files the paperwork in the CRM.",
-    cadence: "Mon / Wed / Fri · ~6am CT",
-    trigger: "scheduled",
-  },
-  {
-    id: "account-warden",
-    title: "The Account Warden",
-    chapter: "Exhibit Hotel",
-    description:
-      "Keeps watch over the health of every sending mailbox, catching problems before they turn into a deliverability headache.",
-    cadence: "Daily · 8am CT",
-    trigger: "scheduled",
-  },
-  {
-    id: "daily-briefing",
-    title: "The Daily Briefing",
-    chapter: "Exhibit India",
-    description:
-      "A standing morning report on the state of the business, written and delivered before the first coffee.",
-    cadence: "Daily · 6:45am CT",
-    trigger: "scheduled",
-  },
-  {
-    id: "reply-handler",
-    title: "The Reply Handler",
-    chapter: "Exhibit Juliett",
-    description:
-      "Reads cold-email replies and decides what happens next, interested, not interested, or unsubscribe, without a human in the loop.",
-    cadence: "Event-driven, weekly fallback sweep",
-    trigger: "event-driven",
-  },
-  {
-    id: "lead-concierge",
-    title: "The Lead Concierge",
-    chapter: "Exhibit Kilo",
-    description:
-      "Chats with visitors on the website, then routes anything worth following up on straight to the inbox.",
-    cadence: "Event-driven",
-    trigger: "event-driven",
-  },
-  {
     id: "newsletter-desk",
     title: "The Newsletter Desk",
-    chapter: "Exhibit Lima",
+    chapter: "Exhibit Foxtrot",
     description:
       "A public sign-up page and daily archive for a research newsletter, running quietly on its own slice of Cloudflare.",
     cadence: "Planned",
