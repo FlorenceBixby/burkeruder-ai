@@ -27,16 +27,14 @@ export default function CrewDispatch() {
       {visible && (
         <motion.div
           key="dispatch"
+          className="crew-dispatch"
           initial={{ y: 120, opacity: 0, scaleX: 0.92 }}
           animate={{ y: 0, opacity: 1, scaleX: 1 }}
           exit={{ y: 120, opacity: 0, scaleX: 0.92 }}
           transition={{ type: "spring", stiffness: 260, damping: 28 }}
           style={{
             position: "fixed",
-            bottom: "32px",
-            left: "32px",
             zIndex: 8000,
-            width: "min(480px, 92vw)",
             pointerEvents: "auto",
           }}
         >
@@ -61,9 +59,9 @@ export default function CrewDispatch() {
               textAlign: "center",
               position: "relative",
             }}>
-              <span style={{
+              <span className="crew-dispatch-eyebrow" style={{
                 fontFamily: "Courier New, monospace",
-                fontSize: "0.55rem", fontWeight: 700,
+                fontWeight: 700,
                 letterSpacing: "0.35em", textTransform: "uppercase",
                 color: "#F5F0E8",
               }}>
@@ -72,10 +70,10 @@ export default function CrewDispatch() {
             </div>
 
             {/* Body */}
-            <div style={{ padding: "24px 32px 28px", textAlign: "center" }}>
+            <div className="crew-dispatch-body" style={{ textAlign: "center" }}>
 
               {/* Stamp / seal row */}
-              <div style={{
+              <div className="crew-dispatch-seal-row" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 gap: "12px", marginBottom: "18px",
               }}>
@@ -93,26 +91,25 @@ export default function CrewDispatch() {
               </div>
 
               {/* Heading */}
-              <p style={{
+              <p className="crew-dispatch-attn" style={{
                 fontFamily: "Courier New, monospace",
-                fontSize: "0.6rem", letterSpacing: "0.25em",
+                letterSpacing: "0.25em",
                 textTransform: "uppercase", color: "#8A9BAB",
                 marginBottom: "10px",
               }}>
                 Attn: All Persons of Curiosity
               </p>
 
-              <h2 style={{
+              <h2 className="crew-dispatch-headline" style={{
                 fontFamily: "Georgia, serif", fontStyle: "italic",
-                fontSize: "clamp(1.1rem, 3vw, 1.45rem)",
                 color: "#1B3A4B", lineHeight: 1.35, margin: "0 0 12px",
               }}>
                 The Belafonte is accepting<br />new crew members.
               </h2>
 
-              <p style={{
+              <p className="crew-dispatch-copy" style={{
                 fontFamily: "Courier New, monospace",
-                fontSize: "0.72rem", color: "#5a7080",
+                color: "#5a7080",
                 lineHeight: 1.75, marginBottom: "22px",
               }}>
                 Qualifications unnecessary.<br />
@@ -123,13 +120,13 @@ export default function CrewDispatch() {
               <Link
                 href="/join"
                 onClick={() => setVisible(false)}
+                className="crew-dispatch-cta"
                 style={{
                   display: "inline-block",
-                  padding: "10px 28px",
                   background: "#C0392B",
                   color: "#F5F0E8",
                   fontFamily: "Courier New, monospace",
-                  fontSize: "0.65rem", letterSpacing: "0.2em",
+                  letterSpacing: "0.2em",
                   textTransform: "uppercase", textDecoration: "none",
                   border: "2px solid #C0392B",
                   transition: "all 0.15s",
@@ -139,7 +136,7 @@ export default function CrewDispatch() {
               </Link>
 
               {/* Countdown bar */}
-              <div style={{ marginTop: "18px", position: "relative" }}>
+              <div className="crew-dispatch-countdown" style={{ position: "relative" }}>
                 <div style={{
                   height: "2px", background: "#d8d0c4",
                   borderRadius: "1px", overflow: "hidden",
@@ -151,9 +148,9 @@ export default function CrewDispatch() {
                     style={{ height: "100%", background: "#C0392B" }}
                   />
                 </div>
-                <p style={{
+                <p className="crew-dispatch-countdown-text" style={{
                   fontFamily: "Courier New, monospace",
-                  fontSize: "0.48rem", letterSpacing: "0.15em",
+                  letterSpacing: "0.15em",
                   color: "#B0A898", marginTop: "6px",
                   textTransform: "uppercase",
                 }}>
@@ -166,16 +163,18 @@ export default function CrewDispatch() {
             <button
               onClick={() => setVisible(false)}
               aria-label="Dismiss"
+              className="crew-dispatch-dismiss"
               style={{
                 position: "absolute", top: "36px", right: "10px",
                 background: "none", border: "none", cursor: "pointer",
-                color: "#F5F0E8", fontSize: "0.85rem", lineHeight: 1,
-                padding: "4px 8px", opacity: 0.75,
+                color: "#F5F0E8", lineHeight: 1,
+                opacity: 0.75,
               }}
             >
               ✕
             </button>
           </div>
+
         </motion.div>
       )}
     </AnimatePresence>

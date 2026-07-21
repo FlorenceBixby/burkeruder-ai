@@ -330,3 +330,38 @@ body::before {
     display: none;
   }
 }
+
+/* Crew dispatch popup */
+.crew-dispatch {
+  bottom: 32px;
+  left: 32px;
+  width: min(480px, 92vw);
+}
+.crew-dispatch-body { padding: 24px 32px 28px; }
+.crew-dispatch-eyebrow { font-size: 0.55rem; }
+.crew-dispatch-attn { font-size: 0.6rem; }
+.crew-dispatch-headline { font-size: clamp(1.1rem, 3vw, 1.45rem); }
+.crew-dispatch-copy { font-size: 0.72rem; }
+.crew-dispatch-cta { padding: 10px 28px; font-size: 0.65rem; }
+.crew-dispatch-countdown { margin-top: 18px; }
+.crew-dispatch-countdown-text { font-size: 0.48rem; }
+.crew-dispatch-dismiss { font-size: 0.85rem; padding: 4px 8px; }
+.crew-dispatch-seal-row { display: flex; }
+
+@media (max-width: 640px) {
+  .crew-dispatch {
+    bottom: 14px;
+    left: 14px;
+    width: 208px;
+  }
+  .crew-dispatch-body { padding: 12px 14px 14px; }
+  .crew-dispatch-eyebrow { font-size: 0.4rem; letter-spacing: 0.2em; }
+  .crew-dispatch-seal-row { display: none; }
+  .crew-dispatch-attn { font-size: 0.44rem; margin-bottom: 6px; }
+  .crew-dispatch-headline { font-size: 0.78rem; margin-bottom: 8px; }
+  .crew-dispatch-copy { font-size: 0.58rem; line-height: 1.5; margin-bottom: 12px; }
+  .crew-dispatch-cta { padding: 6px 14px; font-size: 0.5rem; }
+  .crew-dispatch-countdown { margin-top: 10px; }
+  .crew-dispatch-countdown-text { font-size: 0.38rem; margin-top: 4px; }
+  .crew-dispatch-dismiss { top: 20px; right: 6px; font-size: 0.65rem; padding: 2px 6px; }
+}
