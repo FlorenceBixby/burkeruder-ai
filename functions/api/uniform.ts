@@ -1,5 +1,6 @@
 interface Env {
   FAL_KEY: string;
+  DB: D1Database;
 }
 
 const PROMPT =
@@ -8,13 +9,38 @@ const PROMPT =
 const NEGATIVE_PROMPT =
   "deformed, distorted, disfigured, blurry, bad anatomy, wrong hands, extra limbs, missing limbs, watermark, text";
 
+async function checkRateLimit(db: D1Database, ip: string, endpoint: string, limit: number): Promise<boolean> {
+  const now = Math.floor(Date.now() / 1000);
+  const windowStart = now - 3600;
+  const row = await db.prepare(
+    "SELECT count, window_start FROM rate_limits WHERE ip = ? AND endpoint = ?"
+  ).bind(ip, endpoint).first<{ count: number; window_start: number }>();
+
+  if (!row || row.window_start < windowStart) {
+    await db.prepare(
+      "INSERT OR REPLACE INTO rate_limits (ip, endpoint, count, window_start) VALUES (?, ?, 1, ?)"
+    ).bind(ip, endpoint, now).run();
+    return true;
+  }
+  if (row.count >= limit) return false;
+  await db.prepare(
+    "UPDATE rate_limits SET count = count + 1 WHERE ip = ? AND endpoint = ?"
+  ).bind(ip, endpoint).run();
+  return true;
+}
+
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
+  const ip = ctx.request.headers.get("CF-Connecting-IP") ?? "unknown";
+  const allowed = await checkRateLimit(ctx.env.DB, ip, "uniform", 5);
+  if (!allowed) {
+    return Response.json({ error: "Too many requests. Try again in an hour." }, { status: 429 });
+  }
+
   try {
     const formData = await ctx.request.formData();
     const file = formData.get("photo") as File | null;
     if (!file) return Response.json({ error: "No photo provided" }, { status: 400 });
 
-    // 1. Upload photo to fal.ai storage
     const initRes = await fetch("https://rest.alpha.fal.ai/storage/upload/initiate", {
       method: "POST",
       headers: {
@@ -29,7 +55,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     }
     const { upload_url, file_url } = await initRes.json() as { upload_url: string; file_url: string };
 
-    // 2. PUT file to presigned URL
     const bytes = await file.arrayBuffer();
     await fetch(upload_url, {
       method: "PUT",
@@ -37,7 +62,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       body: bytes,
     });
 
-    // 3. Run PuLID (synchronous)
     const falRes = await fetch("https://fal.run/fal-ai/pulid", {
       method: "POST",
       headers: {

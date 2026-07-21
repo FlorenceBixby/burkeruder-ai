@@ -1,5 +1,6 @@
 interface Env {
   ANTHROPIC_API_KEY: string;
+  DB: D1Database;
 }
 
 const CORS = {
@@ -8,9 +9,34 @@ const CORS = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const { bio } = await request.json() as { bio: string };
+async function checkRateLimit(db: D1Database, ip: string, endpoint: string, limit: number): Promise<boolean> {
+  const now = Math.floor(Date.now() / 1000);
+  const windowStart = now - 3600;
+  const row = await db.prepare(
+    "SELECT count, window_start FROM rate_limits WHERE ip = ? AND endpoint = ?"
+  ).bind(ip, endpoint).first<{ count: number; window_start: number }>();
 
+  if (!row || row.window_start < windowStart) {
+    await db.prepare(
+      "INSERT OR REPLACE INTO rate_limits (ip, endpoint, count, window_start) VALUES (?, ?, 1, ?)"
+    ).bind(ip, endpoint, now).run();
+    return true;
+  }
+  if (row.count >= limit) return false;
+  await db.prepare(
+    "UPDATE rate_limits SET count = count + 1 WHERE ip = ? AND endpoint = ?"
+  ).bind(ip, endpoint).run();
+  return true;
+}
+
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+  const allowed = await checkRateLimit(env.DB, ip, "transform-bio", 10);
+  if (!allowed) {
+    return Response.json({ error: "Too many requests. Try again later." }, { status: 429, headers: CORS });
+  }
+
+  const { bio } = await request.json() as { bio: string };
   if (!bio?.trim()) {
     return Response.json({ error: "No bio provided." }, { status: 400, headers: CORS });
   }
@@ -41,7 +67,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const data = await res.json() as { content: Array<{ text: string }> };
   const transformed = data.content[0]?.text?.trim() ?? "";
-
   return Response.json({ transformed }, { headers: CORS });
 };
 

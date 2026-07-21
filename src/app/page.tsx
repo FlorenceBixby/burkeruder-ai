@@ -6,7 +6,6 @@ import ChapterReveal from "@/components/ChapterReveal";
 import SocialLinks from "@/components/SocialLinks";
 import FloatingElements from "@/components/FloatingElements";
 import JaguarShark from "@/components/JaguarShark";
-import CrewDispatch from "@/components/CrewDispatch";
 import WeatherDispatch from "@/components/WeatherDispatch";
 
 const roles = [
@@ -19,7 +18,6 @@ export default function Home() {
   return (
     <main style={{ paddingTop: "65px", position: "relative" }}>
       <FloatingElements />
-      <CrewDispatch />
 
       {/* ─── HERO: Chapter One ─── */}
       <section className="hero-section" style={{

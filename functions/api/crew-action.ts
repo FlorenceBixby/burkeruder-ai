@@ -1,40 +1,40 @@
 interface Env {
   DB: D1Database;
-  ADMIN_TOKEN: string;
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
-  const token  = url.searchParams.get("token");
-  const id     = url.searchParams.get("id");
-  const action = url.searchParams.get("action");
+  const t = url.searchParams.get("t");
 
-  if (!env.ADMIN_TOKEN || token !== env.ADMIN_TOKEN) {
-    return html("Unauthorized", "Access denied.", "#C0392B");
-  }
+  if (!t) return html("Invalid Link", "This link is missing a token.", "#C0392B");
 
-  if (!id || (action !== "approve" && action !== "reject")) {
-    return html("Invalid", "Missing or invalid parameters.", "#C0392B");
-  }
+  const tokenRow = await env.DB.prepare(
+    "SELECT crew_id, action, used FROM action_tokens WHERE token = ?"
+  ).bind(t).first<{ crew_id: string; action: string; used: number }>();
 
-  const member = await env.DB.prepare("SELECT name, role, approved FROM crew WHERE id = ?").bind(id).first<{ name: string; role: string; approved: number }>();
+  if (!tokenRow) return html("Invalid Link", "This link is invalid or has expired.", "#C0392B");
+  if (tokenRow.used) return html("Already Used", "This link has already been used.", "#888");
 
-  if (!member) {
-    return html("Not Found", "This crew member no longer exists.", "#888");
-  }
+  const { crew_id, action } = tokenRow;
 
-  if (member.approved === 1 && action === "approve") {
-    return html("Already Approved", `${member.name} is already on the manifest.`, "#2d6a4f");
-  }
+  const member = await env.DB.prepare(
+    "SELECT name, role, approved FROM crew WHERE id = ?"
+  ).bind(crew_id).first<{ name: string; role: string; approved: number }>();
+
+  if (!member) return html("Not Found", "This crew member no longer exists.", "#888");
+
+  // Mark token used regardless of outcome
+  await env.DB.prepare("UPDATE action_tokens SET used = 1 WHERE token = ?").bind(t).run();
 
   if (action === "approve") {
+    if (member.approved === 1) return html("Already Approved", `${member.name} is already on the manifest.`, "#2d6a4f");
     const count = await env.DB.prepare("SELECT COUNT(*) as c FROM crew WHERE approved = 1").first<{ c: number }>();
     const position = (count?.c ?? 0) + 1;
-    await env.DB.prepare("UPDATE crew SET approved = 1, position = ? WHERE id = ?").bind(position, id).run();
+    await env.DB.prepare("UPDATE crew SET approved = 1, position = ? WHERE id = ?").bind(position, crew_id).run();
     return html("Welcome Aboard", `${member.name} has been approved as ${member.role} — position #${position}.`, "#2d6a4f");
   }
 
-  await env.DB.prepare("DELETE FROM crew WHERE id = ?").bind(id).run();
+  await env.DB.prepare("DELETE FROM crew WHERE id = ?").bind(crew_id).run();
   return html("Rejected", `${member.name}'s application has been rejected and removed.`, "#6a2d2d");
 };
 

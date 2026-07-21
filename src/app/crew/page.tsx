@@ -326,8 +326,19 @@ export default function CrewPage() {
       {/* Crew grid */}
       <section style={{ padding: "clamp(50px, 6vw, 80px) clamp(24px, 5vw, 80px)", maxWidth: "1300px", margin: "0 auto" }}>
         {loading ? (
-          <div style={{ textAlign: "center", padding: "80px 0", fontFamily: "Courier New, monospace", fontSize: "0.7rem", letterSpacing: "0.2em", color: "var(--muted)", textTransform: "uppercase" }}>
-            Consulting the ship's manifest…
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "24px" }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} style={{ background: "var(--card-bg)", border: "2px solid var(--border)", overflow: "hidden" }}>
+                <div style={{ height: "4px", background: "var(--border)", width: "100%" }} />
+                <div style={{ width: "100%", aspectRatio: "1/1", background: "var(--border)", opacity: 0.4 }} />
+                <div style={{ padding: "16px 18px 20px", display: "grid", gap: "10px" }}>
+                  <div style={{ height: "10px", width: "60%", background: "var(--border)", borderRadius: "2px" }} />
+                  <div style={{ height: "16px", width: "80%", background: "var(--border)", borderRadius: "2px" }} />
+                  <div style={{ height: "10px", width: "100%", background: "var(--border)", borderRadius: "2px" }} />
+                  <div style={{ height: "10px", width: "75%", background: "var(--border)", borderRadius: "2px" }} />
+                </div>
+              </div>
+            ))}
           </div>
         ) : crew.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0" }}>

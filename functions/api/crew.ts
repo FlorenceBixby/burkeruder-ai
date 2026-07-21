@@ -130,11 +130,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       twitter || null, github || null, linkedin || null, discord || null, instagram || null, email || null
     ).run();
 
-    // Notify Burke with approve/reject links
+    // Notify Burke with one-time approve/reject tokens
     try {
       const base = "https://burkeruder.ai";
-      const approveUrl = `${base}/api/crew-action?token=${env.ADMIN_TOKEN}&id=${id}&action=approve`;
-      const rejectUrl  = `${base}/api/crew-action?token=${env.ADMIN_TOKEN}&id=${id}&action=reject`;
+      const approveToken = crypto.randomUUID();
+      const rejectToken  = crypto.randomUUID();
+      const now = Math.floor(Date.now() / 1000);
+      await env.DB.batch([
+        env.DB.prepare("INSERT INTO action_tokens (token, crew_id, action, used, created_at) VALUES (?, ?, 'approve', 0, ?)").bind(approveToken, id, now),
+        env.DB.prepare("INSERT INTO action_tokens (token, crew_id, action, used, created_at) VALUES (?, ?, 'reject', 0, ?)").bind(rejectToken, id, now),
+      ]);
+      const approveUrl = `${base}/api/crew-action?t=${approveToken}`;
+      const rejectUrl  = `${base}/api/crew-action?t=${rejectToken}`;
       const photoHtml  = photo_key
         ? `<img src="${photo_key.startsWith("http") ? photo_key : `${base}/api/photos/${photo_key.replace("crew/", "")}`}" style="width:120px;height:120px;object-fit:cover;display:block;margin-bottom:16px;" />`
         : "";

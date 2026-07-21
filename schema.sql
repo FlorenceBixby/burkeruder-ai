@@ -8,3 +8,45 @@ CREATE TABLE IF NOT EXISTS crew (
   approved INTEGER DEFAULT 0,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS subscribers (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  confirmed INTEGER DEFAULT 0,
+  confirm_token TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS log_entries (
+  id TEXT PRIMARY KEY,
+  day INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  published INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS bottles (
+  id TEXT PRIMARY KEY,
+  message TEXT NOT NULL,
+  author TEXT,
+  approved INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS rate_limits (
+  ip TEXT NOT NULL,
+  endpoint TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 1,
+  window_start INTEGER NOT NULL,
+  PRIMARY KEY (ip, endpoint)
+);
+
+CREATE TABLE IF NOT EXISTS action_tokens (
+  token TEXT PRIMARY KEY,
+  crew_id TEXT NOT NULL,
+  action TEXT NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
