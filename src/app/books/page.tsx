@@ -10,9 +10,9 @@ export default async function BooksPage() {
 
       {/* ── HERO ── */}
       <section style={{
-        padding: "90px 24px 70px",
+        padding: "clamp(60px, 7vw, 90px) clamp(24px, 5vw, 80px) 70px",
         textAlign: "center",
-        maxWidth: "760px",
+        maxWidth: "960px",
         margin: "0 auto",
         position: "relative",
       }}>
@@ -84,7 +84,7 @@ export default async function BooksPage() {
       <div className="stripe-divider" />
 
       {/* ── VOL I: READ ── */}
-      <section style={{ padding: "90px 24px", maxWidth: "1060px", margin: "0 auto" }}>
+      <section style={{ padding: "clamp(60px, 7vw, 90px) clamp(24px, 5vw, 80px)", maxWidth: "1300px", margin: "0 auto" }}>
 
         {/* Section header */}
         <ChapterReveal>
@@ -111,7 +111,7 @@ export default async function BooksPage() {
       <div className="stripe-divider" />
 
       {/* ── VOL II: TO READ ── */}
-      <section style={{ padding: "90px 24px", maxWidth: "900px", margin: "0 auto" }}>
+      <section style={{ padding: "clamp(60px, 7vw, 90px) clamp(24px, 5vw, 80px)", maxWidth: "1100px", margin: "0 auto" }}>
 
         <ChapterReveal>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>

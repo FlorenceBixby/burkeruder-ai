@@ -5,6 +5,9 @@ import Typewriter from "@/components/Typewriter";
 import ChapterReveal from "@/components/ChapterReveal";
 import SocialLinks from "@/components/SocialLinks";
 import FloatingElements from "@/components/FloatingElements";
+import JaguarShark from "@/components/JaguarShark";
+import CrewDispatch from "@/components/CrewDispatch";
+import WeatherDispatch from "@/components/WeatherDispatch";
 
 const roles = [
   "Curious Tinkerer",
@@ -16,9 +19,10 @@ export default function Home() {
   return (
     <main style={{ paddingTop: "65px", position: "relative" }}>
       <FloatingElements />
+      <CrewDispatch />
 
       {/* ─── HERO: Chapter One ─── */}
-      <section style={{
+      <section className="hero-section" style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -33,67 +37,76 @@ export default function Home() {
           <div className="marquee-track" style={{ gap: "48px" }}>
             {Array(8).fill(null).map((_, i) => (
               <span key={i} style={{ fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--muted)", paddingRight: "48px" }}>
-                ◆ burkeruder.ai ◆ life aquatic ◆ austin, tx ◆ tinkering ◆ team zissou ◆ builder of things ◆ curious by nature
+                ◆ voracious reader ◆ canon photographer ◆ digital tinkerer ◆ cyber defender ◆ austin local ◆ curious by nature ◆ system thinker ◆ contraption builder ◆ team zissou ◆ threat vector enthusiast ◆ submarine optimist ◆ perpetual student ◆ cloud navigator ◆ field notes keeper
               </span>
             ))}
           </div>
         </div>
 
-        {/* Chapter label */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.5 }}
-        >
-          <span className="chapter-label">Chapter One</span>
-        </motion.div>
+        {/* Inner layout — single col mobile, two col desktop */}
+        <div className="hero-layout" style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
 
-        <motion.h1
-          className="chapter-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: "20px", maxWidth: "700px" }}
-        >
-          The Curious Case of Burke Ruder
-        </motion.h1>
+          {/* Text side */}
+          <div className="hero-text" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.6, duration: 0.5 }}
+            >
+              <span className="chapter-label">Chapter One</span>
+            </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.1, duration: 0.6 }}
-          style={{ marginTop: "16px", fontSize: "1rem", color: "var(--muted)", letterSpacing: "0.05em" }}
-        >
-          <Typewriter texts={roles} />
-        </motion.p>
+            <motion.h1
+              className="chapter-title hero-title"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              style={{ marginTop: "20px", maxWidth: "560px" }}
+            >
+              The Curious Case of Burke Ruder
+            </motion.h1>
 
-        {/* Avatar */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2.3, duration: 0.6, type: "spring", stiffness: 200 }}
-          style={{ marginTop: "56px" }}
-        >
-          <Avatar />
-        </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.1, duration: 0.6 }}
+              style={{ marginTop: "16px", fontSize: "1rem", color: "var(--muted)", letterSpacing: "0.05em" }}
+            >
+              <Typewriter texts={roles} />
+            </motion.p>
 
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, y: [0, 8, 0] }}
-          transition={{ delay: 3, duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          style={{ marginTop: "70px", color: "var(--muted)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase" }}
-        >
-          ↓ Turn the page ↓
-        </motion.div>
+            {/* Scroll cue — hidden on desktop via CSS */}
+            <motion.div
+              className="hero-scroll-cue"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, y: [0, 8, 0] }}
+              transition={{ delay: 3, duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              style={{ marginTop: "48px", color: "var(--muted)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase" }}
+            >
+              ↓ Turn the page ↓
+            </motion.div>
+          </div>
+
+          {/* Avatar side */}
+          <motion.div
+            className="hero-avatar-wrap"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 2.3, duration: 0.6, type: "spring", stiffness: 200 }}
+            style={{ marginTop: "56px" }}
+          >
+            <Avatar />
+          </motion.div>
+
+        </div>
       </section>
 
       <div className="stripe-divider" />
 
       {/* ─── Chapter Two: About ─── */}
       <section style={{
-        padding: "100px 24px",
-        maxWidth: "860px",
+        padding: "clamp(60px, 7vw, 100px) clamp(24px, 5vw, 80px)",
+        maxWidth: "1100px",
         margin: "0 auto",
         textAlign: "center",
       }}>
@@ -189,7 +202,7 @@ export default function Home() {
       <div className="stripe-divider" />
 
       {/* ─── Chapter Three: Transmissions (Socials) ─── */}
-      <section style={{ padding: "100px 24px", maxWidth: "860px", margin: "0 auto", textAlign: "center" }}>
+      <section style={{ padding: "clamp(60px, 7vw, 100px) clamp(24px, 5vw, 80px)", maxWidth: "1100px", margin: "0 auto", textAlign: "center" }}>
         <ChapterReveal>
           <span className="chapter-label">Chapter Three</span>
         </ChapterReveal>
@@ -205,6 +218,142 @@ export default function Home() {
         </ChapterReveal>
         <ChapterReveal delay={0.2} style={{ marginTop: "40px" }}>
           <SocialLinks />
+        </ChapterReveal>
+      </section>
+
+      <JaguarShark />
+
+      {/* ─── Station Report + Quick Nav ─── */}
+      <section style={{ padding: "clamp(60px, 7vw, 100px) clamp(24px, 5vw, 80px)", maxWidth: "1100px", margin: "0 auto" }}>
+        <div className="weather-nav-grid">
+          <ChapterReveal>
+            <WeatherDispatch />
+          </ChapterReveal>
+          <ChapterReveal delay={0.1}>
+            <div style={{ display: "grid", gap: "12px" }}>
+              {[
+                { href: "/quiz", label: "Find Your Post", desc: "Take the crew assignment quiz.", icon: "◎" },
+                { href: "/log", label: "Captain's Log", desc: "Field notes from the ongoing expedition.", icon: "📓" },
+                { href: "/bottle", label: "Message in a Bottle", desc: "Cast a note into the deep.", icon: "🌊" },
+                { href: "/updates", label: "The Dispatch", desc: "Monthly bulletin — sign up for updates.", icon: "📬" },
+              ].map((item) => (
+                <a key={item.href} href={item.href} style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px 20px", background: "var(--card-bg)", border: "2px solid var(--border)", textDecoration: "none", transition: "border-color 0.15s" }}
+                  onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.borderColor = "var(--seafoam)"}
+                  onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"}
+                >
+                  <span style={{ fontSize: "1.3rem", flexShrink: 0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontFamily: "Courier New, monospace", fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--fg)" }}>{item.label}</div>
+                    <div style={{ fontFamily: "Courier New, monospace", fontSize: "0.6rem", color: "var(--muted)", marginTop: "2px" }}>{item.desc}</div>
+                  </div>
+                  <span style={{ marginLeft: "auto", color: "var(--seafoam)", fontFamily: "Courier New, monospace", fontSize: "0.7rem" }}>→</span>
+                </a>
+              ))}
+            </div>
+          </ChapterReveal>
+        </div>
+      </section>
+
+      <div className="stripe-divider" />
+
+      {/* ─── Expedition Briefing: What to Look For ─── */}
+      <section style={{ padding: "clamp(60px, 7vw, 100px) clamp(24px, 5vw, 80px)", maxWidth: "1100px", margin: "0 auto" }}>
+        <ChapterReveal>
+          <span className="chapter-label">Expedition Briefing</span>
+        </ChapterReveal>
+        <ChapterReveal delay={0.1}>
+          <h2 className="chapter-title" style={{ marginTop: "20px", fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}>
+            Things to Be On the Lookout For
+          </h2>
+        </ChapterReveal>
+        <ChapterReveal delay={0.15}>
+          <p style={{ color: "var(--muted)", marginTop: "12px", fontSize: "0.85rem", lineHeight: 1.8, fontFamily: "Courier New, monospace", maxWidth: "560px" }}>
+            This site rewards exploration. Some things are hidden. Some things react. Some things are just for you.
+          </p>
+        </ChapterReveal>
+
+        <ChapterReveal delay={0.2}>
+          <div style={{ marginTop: "48px", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1px", background: "var(--border)", border: "2px solid var(--border)" }}>
+            {[
+              {
+                num: "01",
+                label: "The Keyboard Sequence",
+                hint: "Type a specific six-letter word anywhere on the site. The ocean will respond.",
+                tag: "Hidden",
+              },
+              {
+                num: "02",
+                label: "The Jaguar Shark",
+                hint: "Scroll to the very bottom of the home page. Look into the porthole. Something is watching.",
+                tag: "Visible",
+              },
+              {
+                num: "03",
+                label: "First Aboard Badges",
+                hint: "The first 10 crew members to join the manifest earn a permanent gold anchor badge.",
+                tag: "Crew",
+              },
+              {
+                num: "04",
+                label: "The Quiz",
+                hint: "Five questions assign you a post aboard the Belafonte. Your result pre-fills the join form.",
+                tag: "Interactive",
+              },
+              {
+                num: "05",
+                label: "Lost at Sea",
+                hint: "Navigate to a page that doesn't exist. The ship's log has an entry for it.",
+                tag: "Hidden",
+              },
+              {
+                num: "06",
+                label: "Message in a Bottle",
+                hint: "Leave a note. Or find the ones others have left. Click a bottle to unseal it.",
+                tag: "Community",
+              },
+              {
+                num: "07",
+                label: "The Weather Station",
+                hint: "The home page pulls live Austin conditions and formats them as a nautical station report.",
+                tag: "Live",
+              },
+              {
+                num: "08",
+                label: "The Dispatch Popup",
+                hint: "Wait 3 seconds on the home page. An official communiqué will self-destruct in five.",
+                tag: "Timed",
+              },
+              {
+                num: "09",
+                label: "Dark Mode",
+                hint: "The moon in the top-right corner of navigation toggles the site into night operations.",
+                tag: "UI",
+              },
+              {
+                num: "10",
+                label: "Captain's Log",
+                hint: "Field notes published from the expedition. Day numbers. No dates. Check back.",
+                tag: "Ongoing",
+              },
+            ].map((item) => (
+              <div key={item.num} style={{ background: "var(--card-bg)", padding: "28px 32px", position: "relative" }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "12px" }}>
+                  <span style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: "2rem", color: "#C0392B", lineHeight: 1, opacity: 0.6 }}>
+                    {item.num}
+                  </span>
+                  <span style={{ fontFamily: "Courier New, monospace", fontSize: "0.48rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--seafoam)", border: "1px solid var(--seafoam)", padding: "2px 8px", opacity: 0.7, flexShrink: 0 }}>
+                    {item.tag}
+                  </span>
+                </div>
+                <div style={{ fontFamily: "Courier New, monospace", fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--fg)", marginBottom: "8px" }}>
+                  {item.label}
+                </div>
+                <div style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.7 }}>
+                  {item.hint}
+                </div>
+              </div>
+            ))}
+          </div>
         </ChapterReveal>
       </section>
 

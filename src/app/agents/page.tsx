@@ -1,11 +1,28 @@
 "use client";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import ChapterReveal from "@/components/ChapterReveal";
-import AgentCard from "@/components/AgentCard";
+import AgentCard, { AgentStatusEntry } from "@/components/AgentCard";
 import FloatingElements from "@/components/FloatingElements";
 import { agents } from "@/lib/agents";
 
+const legend = [
+  { color: "#27AE60", label: "Healthy" },
+  { color: "var(--red-zissou)", label: "Failing" },
+  { color: "var(--seafoam)", label: "Active / Event-driven" },
+  { color: "var(--muted)", label: "Unknown" },
+];
+
 export default function AgentsPage() {
+  const [statuses, setStatuses] = useState<Record<string, AgentStatusEntry>>({});
+
+  useEffect(() => {
+    fetch("/api/agent-status")
+      .then((res) => (res.ok ? res.json() : {}))
+      .then(setStatuses)
+      .catch(() => setStatuses({}));
+  }, []);
+
   return (
     <main style={{ paddingTop: "65px", position: "relative", minHeight: "100vh" }}>
       <FloatingElements />
@@ -38,6 +55,20 @@ export default function AgentsPage() {
           Everything running quietly below deck — the small crew of AI agents
           handling inboxes, research, outreach, and upkeep so I don't have to.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          style={{ display: "flex", justifyContent: "center", gap: "24px", marginTop: "32px", flexWrap: "wrap" }}
+        >
+          {legend.map((s) => (
+            <span key={s.label} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)" }}>
+              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, display: "inline-block" }} />
+              {s.label}
+            </span>
+          ))}
+        </motion.div>
       </section>
 
       <div className="stripe-divider" />
@@ -51,7 +82,7 @@ export default function AgentsPage() {
             gap: "24px",
           }}>
             {agents.map((agent, i) => (
-              <AgentCard key={agent.id} agent={agent} index={i} />
+              <AgentCard key={agent.id} agent={agent} index={i} status={statuses[agent.id]} />
             ))}
           </div>
         </ChapterReveal>

@@ -1,0 +1,52 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#1B3A4B"/>
+
+  <!-- Grain texture overlay suggestion via subtle pattern -->
+  <rect width="1200" height="630" fill="url(#grain)" opacity="0.04"/>
+
+  <!-- Red stripe top -->
+  <rect x="0" y="0" width="1200" height="5" fill="#C0392B"/>
+
+  <!-- Red stripe bottom -->
+  <rect x="0" y="625" width="1200" height="5" fill="#C0392B"/>
+
+  <!-- Left accent stripe -->
+  <rect x="80" y="0" width="3" height="630" fill="#C0392B" opacity="0.3"/>
+
+  <!-- Decorative double border frame -->
+  <rect x="60" y="60" width="1080" height="510" fill="none" stroke="#D4B896" stroke-width="2" opacity="0.4"/>
+  <rect x="70" y="70" width="1060" height="490" fill="none" stroke="#D4B896" stroke-width="1" opacity="0.2"/>
+
+  <!-- Corner decorations -->
+  <circle cx="60" cy="60" r="4" fill="#D4B896" opacity="0.5"/>
+  <circle cx="1140" cy="60" r="4" fill="#D4B896" opacity="0.5"/>
+  <circle cx="60" cy="570" r="4" fill="#D4B896" opacity="0.5"/>
+  <circle cx="1140" cy="570" r="4" fill="#D4B896" opacity="0.5"/>
+
+  <!-- Chapter label -->
+  <text x="600" y="170" font-family="Courier New, monospace" font-size="14" font-weight="700" letter-spacing="6" text-anchor="middle" fill="#C0392B" text-transform="uppercase">THE CURIOUS CASE OF</text>
+  <line x1="340" y1="165" x2="480" y2="165" stroke="#C0392B" stroke-width="1.5" opacity="0.6"/>
+  <line x1="720" y1="165" x2="860" y2="165" stroke="#C0392B" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Main name -->
+  <text x="600" y="300" font-family="Georgia, serif" font-style="italic" font-size="96" text-anchor="middle" fill="#F5F0E8">Burke Ruder</text>
+
+  <!-- Tagline -->
+  <text x="600" y="370" font-family="Courier New, monospace" font-size="18" letter-spacing="4" text-anchor="middle" fill="#7FB5B0">Reader · Photographer · Tinkerer · Cyber Defender</text>
+
+  <!-- Divider -->
+  <line x1="420" y1="410" x2="780" y2="410" stroke="#D4B896" stroke-width="1" opacity="0.5"/>
+
+  <!-- Domain -->
+  <text x="600" y="460" font-family="Courier New, monospace" font-size="20" letter-spacing="3" text-anchor="middle" fill="#D4B896" opacity="0.8">burkeruder.ai</text>
+
+  <!-- Zissou reference -->
+  <text x="600" y="530" font-family="Georgia, serif" font-style="italic" font-size="14" text-anchor="middle" fill="#7FB5B0" opacity="0.6">"Welcome aboard."</text>
+
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+</svg>

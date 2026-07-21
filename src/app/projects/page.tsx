@@ -10,7 +10,7 @@ export default function ProjectsPage() {
     <main style={{ paddingTop: "65px", position: "relative", minHeight: "100vh" }}>
       <FloatingElements />
 
-      <section style={{ padding: "80px 24px 60px", textAlign: "center", maxWidth: "980px", margin: "0 auto" }}>
+      <section style={{ padding: "clamp(60px, 7vw, 80px) clamp(24px, 5vw, 80px) 60px", textAlign: "center", maxWidth: "1200px", margin: "0 auto" }}>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,7 +62,7 @@ export default function ProjectsPage() {
       <div className="stripe-divider" />
 
       {/* Project grid */}
-      <section style={{ padding: "80px 24px", maxWidth: "980px", margin: "0 auto" }}>
+      <section style={{ padding: "clamp(40px, 5vw, 80px) clamp(24px, 5vw, 80px)", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
