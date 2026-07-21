@@ -13,7 +13,7 @@ export const projects: Project[] = [
   {
     id: "portfolio",
     title: "The Personal Dossier",
-    chapter: "Exhibit I",
+    chapter: "Exhibit Alpha",
     description: "A meticulously curated portrait of one man's professional exploits, rendered in pixels and prose. Also: this website.",
     tags: ["React", "Next.js", "Framer Motion"],
     status: "live",
@@ -23,7 +23,7 @@ export const projects: Project[] = [
   {
     id: "ats",
     title: "The Recruitment Apparatus",
-    chapter: "Exhibit II",
+    chapter: "Exhibit Bravo",
     description: "A purpose-built instrument for navigating the labyrinthine world of applicant tracking — because hiring shouldn't require a map and a flashlight.",
     tags: ["ATS", "Tools", "Productivity"],
     status: "live",
@@ -33,7 +33,7 @@ export const projects: Project[] = [
   {
     id: "rankworld",
     title: "Rank World",
-    chapter: "Exhibit III",
+    chapter: "Exhibit Charlie",
     description: "An expedition into the world of rankings — because everything deserves a proper hierarchy. Currently under construction, but the bones are good.",
     tags: ["Web", "Rankings", "WIP"],
     status: "wip",
@@ -43,7 +43,7 @@ export const projects: Project[] = [
   {
     id: "placeholder-1",
     title: "Operation: Classified",
-    chapter: "Exhibit IV",
+    chapter: "Exhibit Delta",
     description: "Details of this particular venture remain classified pending further development. Check back after the next expedition.",
     tags: ["TBD", "Coming Soon"],
     status: "concept",
@@ -52,7 +52,7 @@ export const projects: Project[] = [
   {
     id: "placeholder-2",
     title: "The Cloud Cartographer",
-    chapter: "Exhibit III",
+    chapter: "Exhibit Echo",
     description: "An ongoing cartographic effort to map the vast and treacherous terrain of enterprise cloud infrastructure.",
     tags: ["Cloud", "Security", "AWS"],
     status: "wip",
