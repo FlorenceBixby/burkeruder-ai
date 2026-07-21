@@ -72,7 +72,6 @@ export const agents: Agent[] = [
       "Drafts and publishes blog content on a running schedule, keeping the lights on even when nobody's home.",
     cadence: "Mon / Wed / Fri · 9am CT",
     trigger: "scheduled",
-    source: { kind: "cloudflare-worker", script: "tig-blog-agent" },
   },
   {
     id: "prospecting-machine",
@@ -82,7 +81,6 @@ export const agents: Agent[] = [
       "An end-to-end pipeline that finds prospects, scores them, drafts outreach, and files the paperwork in the CRM.",
     cadence: "Mon / Wed / Fri · ~6am CT",
     trigger: "scheduled",
-    source: { kind: "github-actions", repo: "FlorenceBixby/TheInterestingGroup", workflow: "prospect-run.yml" },
   },
   {
     id: "account-warden",
@@ -92,7 +90,6 @@ export const agents: Agent[] = [
       "Keeps watch over the health of every sending mailbox, catching problems before they turn into a deliverability headache.",
     cadence: "Daily · 8am CT",
     trigger: "scheduled",
-    source: { kind: "github-actions", repo: "FlorenceBixby/TheInterestingGroup", workflow: "mailbox-manager.yml" },
   },
   {
     id: "daily-briefing",
@@ -102,7 +99,6 @@ export const agents: Agent[] = [
       "A standing morning report on the state of the business, written and delivered before the first coffee.",
     cadence: "Daily · 6:45am CT",
     trigger: "scheduled",
-    source: { kind: "github-actions", repo: "FlorenceBixby/TheInterestingGroup", workflow: "morning-briefing.yml" },
   },
   {
     id: "reply-handler",
@@ -112,7 +108,6 @@ export const agents: Agent[] = [
       "Reads cold-email replies and decides what happens next, interested, not interested, or unsubscribe, without a human in the loop.",
     cadence: "Event-driven, weekly fallback sweep",
     trigger: "event-driven",
-    source: { kind: "github-actions", repo: "FlorenceBixby/TheInterestingGroup", workflow: "reply-handler.yml" },
   },
   {
     id: "lead-concierge",
