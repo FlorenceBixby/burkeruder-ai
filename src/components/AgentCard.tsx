@@ -58,16 +58,25 @@ function StatusPill({ agent, entry }: { agent: Agent; entry?: AgentStatusEntry }
   );
 }
 
+function repoUrl(agent: Agent): string | undefined {
+  return agent.source?.kind === "github-actions" ? `https://github.com/${agent.source.repo}` : undefined;
+}
+
 export default function AgentCard({ agent, index, status }: { agent: Agent; index: number; status?: AgentStatusEntry }) {
+  const url = repoUrl(agent);
+  const Card = url ? motion.a : motion.div;
+  const linkProps = url ? { href: url, target: "_blank", rel: "noopener noreferrer" } : {};
+
   return (
-    <motion.div
+    <Card
+      {...linkProps}
       className="project-card"
       initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? -1 : 1 }}
       whileInView={{ opacity: 1, y: 0, rotate: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, rotate: 0.5 }}
-      style={{ padding: "28px", position: "relative", overflow: "hidden" }}
+      style={{ padding: "28px", position: "relative", overflow: "hidden", display: "block", textDecoration: "none", cursor: url ? "pointer" : "default" }}
     >
       {/* Corner chapter label */}
       <div style={{
@@ -105,6 +114,12 @@ export default function AgentCard({ agent, index, status }: { agent: Agent; inde
         {agent.cadence}
       </p>
 
+      {url && (
+        <p style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
+          View on GitHub &#8599;
+        </p>
+      )}
+
       {/* Hover bottom bar */}
       <motion.div
         initial={{ scaleX: 0 }}
@@ -119,6 +134,6 @@ export default function AgentCard({ agent, index, status }: { agent: Agent; inde
           transformOrigin: "left",
         }}
       />
-    </motion.div>
+    </Card>
   );
 }
