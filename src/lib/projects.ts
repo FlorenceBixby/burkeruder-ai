@@ -42,7 +42,7 @@ export const projects: Project[] = [
   },
   {
     id: "sunfield",
-    title: "Sunfield",
+    title: "D&D",
     chapter: "Exhibit Delta",
     description: "An artificial intelligence assumes the mantle of Dungeon Master, guiding a fellowship of friends through campaigns both perilous and absurd — no wrangling six calendars required, just a phone and a sense of adventure.",
     tags: ["D&D", "AI Dungeon Master", "Multiplayer"],
