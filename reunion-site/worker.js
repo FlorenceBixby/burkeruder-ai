@@ -5,18 +5,16 @@
 // than duplicating that backend — this Worker is presentation only, no D1 binding of its own.
 
 const API_BASE = "https://burkeruder.ai/api/reunion";
-
-// Mirrors src/lib/reunion.ts on the main site — keep ids in sync with that file if the
-// slate ever changes; renaming an id here without renaming it there orphans old votes.
 const REUNION_YEAR = 2027;
-const WINDOWS = [
-  { id: "w-mar",  label: "MAR",   dates: "March 12–14",    days: "Fri–Sun", note: "Spring break for most districts", start: "2027-03-12" },
-  { id: "w-may",  label: "MAY",   dates: "May 28–31",      days: "Fri–Mon", note: "Memorial Day — long weekend",     start: "2027-05-28" },
-  { id: "w-jun",  label: "JUN",   dates: "June 18–20",     days: "Fri–Sun", note: "School's out, before vacations",  start: "2027-06-18" },
-  { id: "w-jul4", label: "JUL 4", dates: "July 2–5",       days: "Fri–Mon", note: "Independence Day — long weekend", start: "2027-07-02" },
-  { id: "w-jul",  label: "JUL",   dates: "July 23–25",     days: "Fri–Sun", note: "High summer",                     start: "2027-07-23" },
-  { id: "w-sep",  label: "SEP",   dates: "September 3–6",  days: "Fri–Mon", note: "Labor Day — long weekend",        start: "2027-09-03" },
-  { id: "w-nov",  label: "NOV",   dates: "November 24–28", days: "Wed–Sun", note: "Thanksgiving week",               start: "2027-11-24" },
+
+// Calendar months polled — JS month index (0-based): June=5, July=6, August=7.
+// A day's pick is stored as { "2027-06-15": "yes" } — only selected days are ever sent,
+// which fits the existing /api/reunion contract (picks is just Record<string, Vote>, any
+// string key up to 40 chars) with zero backend changes.
+const MONTHS = [
+  { year: REUNION_YEAR, month: 5, name: "June" },
+  { year: REUNION_YEAR, month: 6, name: "July" },
+  { year: REUNION_YEAR, month: 7, name: "August" },
 ];
 
 export default {
@@ -51,7 +49,7 @@ const PAGE = `<!doctype html>
   --line: #DDDDDD;
   --win: #1D6B3A;
   --loss: #B3261E;
-  --accent: #111111;
+  --heat: 17, 107, 58;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -63,7 +61,7 @@ body {
   position: relative;
   font-feature-settings: 'tnum' 1;
 }
-.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 100px; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 100px; }
 
 /* ── MASTHEAD ────────────────────────────────────────────── */
 .masthead-bar {
@@ -137,30 +135,13 @@ body {
 }
 .lede strong { color: var(--ink); font-weight: 700; }
 
-/* ── BOX SCORE TABLE ─────────────────────────────────────── */
-.boxscore { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-.boxscore th, .boxscore td { padding: 11px 8px; text-align: center; }
-.boxscore thead th { border-bottom: 2px solid var(--ink); }
-.boxscore tbody tr { border-bottom: 1px solid var(--line); }
-.boxscore tbody tr:last-child { border-bottom: none; }
-.boxscore th {
-  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.68rem; color: var(--muted);
+/* ── WHO-YOU-ARE CARD ────────────────────────────────────── */
+.whoami {
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 8px; padding: clamp(16px,3vw,24px);
+  margin-bottom: 28px;
 }
-.boxscore td.window-cell { text-align: left; }
-.boxscore td.window-cell .w-label { font-weight: 700; letter-spacing: 0.01em; }
-.boxscore td.window-cell .w-dates { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-.boxscore tr.leader td.window-cell .w-label::before { content: '\\2605  '; color: var(--ink); }
-.boxscore .pct { font-weight: 700; }
-.boxscore .w-count { color: var(--win); font-weight: 600; }
-.boxscore .l-count { color: var(--loss); }
-.bs-scroll { overflow-x: auto; }
-.bs-note { font-size: 0.72rem; color: var(--muted); margin-top: 12px; line-height: 1.6; }
-
-/* ── BALLOT FORM ─────────────────────────────────────────── */
-.ballot {
-  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 8px; padding: clamp(18px,4vw,32px);
-}
-.field { margin-bottom: 18px; }
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
 .field label {
   display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
@@ -172,27 +153,56 @@ body {
 .field input:focus, .field textarea:focus { border-color: var(--ink); }
 .field-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
 @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
-
-.pick-row {
-  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;
-  padding: 11px 0; border-bottom: 1px solid var(--line);
+.save-status {
+  font-size: 0.78rem; margin-top: 4px; min-height: 1.2em; color: var(--muted);
 }
-.pick-row:last-of-type { border-bottom: none; }
-.pick-info .w-label { font-weight: 600; }
-.pick-info .w-meta { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-.pick-toggle { display: flex; gap: 4px; }
-.pick-toggle button {
-  font-family: inherit; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em;
-  padding: 8px 12px; background: #fff; border: 1.5px solid var(--line); border-radius: 4px;
-  color: var(--muted); cursor: pointer; min-width: 52px; transition: all 0.12s;
-}
-.pick-toggle button[data-v="yes"].active { background: var(--win); border-color: var(--win); color: #fff; }
-.pick-toggle button[data-v="maybe"].active { background: var(--ink); border-color: var(--ink); color: #fff; }
-.pick-toggle button[data-v="no"].active { background: var(--loss); border-color: var(--loss); color: #fff; }
+.save-status.ok { color: var(--win); }
+.save-status.err { color: var(--loss); }
 
-.ballot-msg { font-size: 0.85rem; padding: 12px 14px; margin-top: 16px; display: none; border-radius: 4px; }
-.ballot-msg.ok { display: block; background: #EAF4EC; border: 1px solid var(--win); color: var(--win); }
-.ballot-msg.err { display: block; background: #FBEAE9; border: 1px solid var(--loss); color: var(--loss); }
+/* ── CALENDAR PICKER ─────────────────────────────────────── */
+.cal-months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 680px) { .cal-months { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; } }
+.cal-month-name {
+  font-weight: 700; font-size: 0.85rem; text-align: center; margin-bottom: 10px;
+}
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-weekday { font-size: 0.6rem; color: var(--muted); text-align: center; padding-bottom: 4px; font-weight: 600; }
+.cal-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; border-radius: 5px; cursor: pointer; user-select: none;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink); font-weight: 500;
+  transition: transform 0.1s, background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cal-day:hover { border-color: var(--ink); }
+.cal-day:active { transform: scale(0.92); }
+.cal-day.blank { visibility: hidden; cursor: default; }
+.cal-day.selected { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 700; }
+.cal-legend { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 0.75rem; color: var(--muted); }
+.cal-legend .cal-day { width: 18px; height: 18px; aspect-ratio: unset; font-size: 0; flex-shrink: 0; cursor: default; }
+
+/* ── HEAT CALENDAR (overlap) ─────────────────────────────── */
+.heat-day { color: var(--ink); font-weight: 600; border-color: var(--line); cursor: default; }
+.heat-day:hover { border-color: var(--line); }
+.heat-day:active { transform: none; }
+.heat-day.top1::after { content: '\\2605'; position: absolute; font-size: 0.55em; transform: translate(9px, -9px); color: var(--ink); }
+.heat-day { position: relative; }
+.heat-scale { display: flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 0.72rem; color: var(--muted); }
+.heat-scale .sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--line); }
+
+.top-days { margin-top: 28px; }
+.top-days ol { list-style: none; counter-reset: rank; }
+.top-days li {
+  counter-increment: rank; padding: 10px 0; border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; gap: 12px; font-size: 0.9rem;
+}
+.top-days li:last-child { border-bottom: none; }
+.top-days li::before {
+  content: counter(rank); font-family: 'Source Serif 4', Georgia, serif; font-weight: 700;
+  color: var(--muted); font-size: 0.85rem; width: 1.4em; flex-shrink: 0;
+}
+.top-days .td-date { font-weight: 600; flex-shrink: 0; }
+.top-days .td-count { color: var(--muted); font-size: 0.82rem; }
+.top-days-empty { color: var(--muted); font-size: 0.88rem; padding: 12px 0; }
 
 /* ── ROSTER ──────────────────────────────────────────────── */
 .roster { border-top: 1px solid var(--line); }
@@ -217,7 +227,7 @@ footer p { font-size: 0.7rem; color: var(--muted); }
   <div class="masthead">
     <div class="masthead-date" id="editionDate">--</div>
     <h1>The Reunion Gazette</h1>
-    <div class="masthead-tag">Every Vote Filed — Every Date Contested</div>
+    <div class="masthead-tag">Every Day Marked — Every Overlap Counted</div>
   </div>
   <div class="rule-thin"></div>
 
@@ -231,19 +241,20 @@ footer p { font-size: 0.7rem; color: var(--muted); }
   <div id="app">
     <p class="lede" id="lede">
       The committee is polling the field before <strong>locking the ${REUNION_YEAR} reunion dates</strong>.
-      Mark every window you could make it, file your ballot, and check back — the box score updates live as the family weighs in.
+      Tap every day in June, July, or August you could make it — your picks save automatically. Scroll down to see where the family overlaps.
     </p>
 
     <div class="section">
       <div class="section-head">
-        <h2>File Your Ballot</h2>
-        <span class="kicker" id="ballotKicker">Amend anytime</span>
+        <h2>Mark Your Days</h2>
+        <span class="kicker" id="saveKicker">Saves automatically</span>
       </div>
-      <form class="ballot" id="ballotForm">
+
+      <div class="whoami">
         <div class="field-row">
           <div class="field">
             <label for="fName">Name *</label>
-            <input id="fName" required maxlength="60" placeholder="Your name">
+            <input id="fName" maxlength="60" placeholder="Your name">
           </div>
           <div class="field">
             <label for="fParty">Party Size</label>
@@ -254,36 +265,36 @@ footer p { font-size: 0.7rem; color: var(--muted); }
           <label for="fHousehold">Household (optional — helps us not double-count couples)</label>
           <input id="fHousehold" maxlength="60" placeholder="e.g. &quot;Burke &amp; family&quot;">
         </div>
-
-        <div class="field" style="margin-top:26px;">
-          <label style="margin-bottom:2px;">Mark Every Window You Could Make It</label>
-        </div>
-        <div id="pickRows"></div>
-
-        <div class="field" style="margin-top:18px;">
+        <div class="field">
           <label for="fNote">Note (optional)</label>
           <textarea id="fNote" rows="2" maxlength="280" placeholder="Anything the committee should know…"></textarea>
         </div>
+        <div class="save-status" id="saveStatus">Add your name above, then tap days on the calendar below.</div>
+      </div>
 
-        <button class="btn" type="submit" id="submitBtn">→ File Ballot</button>
-        <div class="ballot-msg" id="ballotMsg"></div>
-      </form>
+      <div class="cal-months" id="pickerCal"></div>
+      <div class="cal-legend">
+        <span class="cal-day"></span> <span>open</span>
+        <span class="cal-day selected" style="margin-left:10px;"></span> <span>you're in</span>
+      </div>
     </div>
 
     <div class="section">
       <div class="section-head">
-        <h2>Standings</h2>
-        <span class="kicker" id="standingsKicker">— ballots</span>
+        <h2>Best Days</h2>
+        <span class="kicker" id="heatKicker">— ballots</span>
       </div>
-      <div class="bs-scroll">
-        <table class="boxscore" id="boxscore">
-          <thead>
-            <tr><th>Window</th><th>W</th><th>T</th><th>L</th><th>PCT</th><th>Heads</th></tr>
-          </thead>
-          <tbody id="boxscoreBody"></tbody>
-        </table>
+      <div class="cal-months" id="heatCal"></div>
+      <div class="heat-scale">
+        <span>Fewer</span>
+        <span class="sw" style="background:rgba(var(--heat),0.08)"></span>
+        <span class="sw" style="background:rgba(var(--heat),0.3)"></span>
+        <span class="sw" style="background:rgba(var(--heat),0.55)"></span>
+        <span class="sw" style="background:rgba(var(--heat),0.8)"></span>
+        <span class="sw" style="background:rgba(var(--heat),1)"></span>
+        <span>More people free</span>
       </div>
-      <p class="bs-note">W = can make it · T = maybe · L = can't make it · PCT = (W + T&frasl;2) &divide; ballots cast, same math as a real standings page. Heads = confirmed attendees (party size included) for that window.</p>
+      <div class="top-days" id="topDays"></div>
     </div>
 
     <div class="section">
@@ -306,91 +317,148 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 // this script keeps working exactly as it does right now.
 (function () {
   var API = ${JSON.stringify(API_BASE)};
-  var WINDOWS = ${JSON.stringify(WINDOWS)};
+  var MONTHS = ${JSON.stringify(MONTHS)};
   var codeKey = "reunion_code";
-  var picks = {};
+  var identityKey = "reunion_identity";
+  var WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
   document.getElementById("editionDate").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).toUpperCase();
 
-  function buildPickRows() {
-    var wrap = document.getElementById("pickRows");
-    wrap.innerHTML = WINDOWS.map(function (w) {
-      return '<div class="pick-row" data-id="' + w.id + '">' +
-        '<div class="pick-info"><span class="w-label">' + w.label + ' — ' + w.dates + '</span>' +
-        '<span class="w-meta">' + w.days + ' · ' + w.note + '</span></div>' +
-        '<div class="pick-toggle">' +
-          '<button type="button" data-v="yes">Yes</button>' +
-          '<button type="button" data-v="maybe">Maybe</button>' +
-          '<button type="button" data-v="no">No</button>' +
-        '</div></div>';
-    }).join("");
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function dateKey(year, month, day) { return year + "-" + pad2(month + 1) + "-" + pad2(day); }
+  function fmtDateLabel(key) {
+    var parts = key.split("-").map(Number);
+    var d = new Date(parts[0], parts[1] - 1, parts[2]);
+    return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  }
 
-    wrap.querySelectorAll(".pick-toggle button").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var row = btn.closest(".pick-row");
-        var id = row.getAttribute("data-id");
-        var v = btn.getAttribute("data-v");
-        picks[id] = picks[id] === v ? null : v;
-        row.querySelectorAll("button").forEach(function (b) {
-          b.classList.toggle("active", picks[id] === b.getAttribute("data-v"));
-        });
+  function buildCalGrid(containerEl, opts) {
+    // opts: { onCellClick(key, cellEl) } — if omitted, cells render read-only (heat map).
+    containerEl.innerHTML = "";
+    MONTHS.forEach(function (m) {
+      var wrap = document.createElement("div");
+      var firstDow = new Date(m.year, m.month, 1).getDay();
+      var daysInMonth = new Date(m.year, m.month + 1, 0).getDate();
+
+      var head = document.createElement("div");
+      head.className = "cal-month-name";
+      head.textContent = m.name + " " + m.year;
+      wrap.appendChild(head);
+
+      var grid = document.createElement("div");
+      grid.className = "cal-grid";
+      WEEKDAYS.forEach(function (wd) {
+        var el = document.createElement("div");
+        el.className = "cal-weekday";
+        el.textContent = wd;
+        grid.appendChild(el);
       });
+      for (var i = 0; i < firstDow; i++) {
+        var blank = document.createElement("div");
+        blank.className = "cal-day blank";
+        grid.appendChild(blank);
+      }
+      for (var day = 1; day <= daysInMonth; day++) {
+        var key = dateKey(m.year, m.month, day);
+        var cell = document.createElement("div");
+        cell.className = opts.heat ? "cal-day heat-day" : "cal-day";
+        cell.textContent = day;
+        cell.setAttribute("data-date", key);
+        if (opts.onCellClick) cell.addEventListener("click", function () { opts.onCellClick(this.getAttribute("data-date"), this); });
+        grid.appendChild(cell);
+      }
+      wrap.appendChild(grid);
+      containerEl.appendChild(wrap);
     });
   }
-  buildPickRows();
 
-  function fmtPct(pct) {
-    var s = pct.toFixed(3);
-    return pct < 1 ? s.replace(/^0/, "") : s;
-  }
+  // ── Picker calendar (my own picks) ──────────────────────────────────────
+  var myPicks = {};
+  var pickerEl = document.getElementById("pickerCal");
+  buildCalGrid(pickerEl, {
+    onCellClick: function (key, cellEl) {
+      if (myPicks[key]) delete myPicks[key];
+      else myPicks[key] = "yes";
+      cellEl.classList.toggle("selected", !!myPicks[key]);
+      scheduleSave();
+    },
+  });
 
-  function computeStandings(ballots) {
-    return WINDOWS.map(function (w) {
-      var yes = 0, maybe = 0, no = 0, heads = 0;
-      ballots.forEach(function (b) {
-        var v = b.picks && b.picks[w.id];
-        if (v === "yes") { yes++; heads += b.party_size || 1; }
-        else if (v === "maybe") { maybe++; }
-        else if (v === "no") { no++; }
-      });
-      var cast = yes + maybe + no;
-      var pct = cast ? (yes + maybe / 2) / cast : 0;
-      return { window: w, yes: yes, maybe: maybe, no: no, cast: cast, heads: heads, pct: pct };
-    }).sort(function (a, b) {
-      return b.pct - a.pct || b.heads - a.heads || a.window.start.localeCompare(b.window.start);
+  function refreshPickerSelection() {
+    pickerEl.querySelectorAll(".cal-day[data-date]").forEach(function (cell) {
+      cell.classList.toggle("selected", !!myPicks[cell.getAttribute("data-date")]);
     });
   }
 
-  function renderStandings(ballots) {
-    var standings = computeStandings(ballots);
-    var body = document.getElementById("boxscoreBody");
-    var topPct = standings.length ? standings[0].pct : 0;
-    body.innerHTML = standings.map(function (s, i) {
-      var isLeader = s.cast > 0 && s.pct === topPct && i === 0;
-      return '<tr class="' + (isLeader ? "leader" : "") + '">' +
-        '<td class="window-cell"><span class="w-label">' + s.window.label + '</span>' +
-        '<span class="w-dates">' + s.window.dates + '</span></td>' +
-        '<td class="w-count">' + s.yes + '</td>' +
-        '<td>' + s.maybe + '</td>' +
-        '<td class="l-count">' + s.no + '</td>' +
-        '<td class="pct">' + (s.cast ? fmtPct(s.pct) : '—') + '</td>' +
-        '<td>' + s.heads + '</td></tr>';
-    }).join("");
-    document.getElementById("standingsKicker").textContent = ballots.length + (ballots.length === 1 ? " ballot cast" : " ballots cast");
+  // ── Heat calendar (everyone's overlap) ──────────────────────────────────
+  var heatEl = document.getElementById("heatCal");
+  buildCalGrid(heatEl, { heat: true });
+
+  function renderHeat(ballots) {
+    var headsByDate = {}, housesByDate = {};
+    ballots.forEach(function (b) {
+      Object.keys(b.picks || {}).forEach(function (k) {
+        if (b.picks[k] !== "yes") return;
+        headsByDate[k] = (headsByDate[k] || 0) + (b.party_size || 1);
+        housesByDate[k] = (housesByDate[k] || 0) + 1;
+      });
+    });
+    var maxHeads = 0;
+    Object.keys(headsByDate).forEach(function (k) { if (headsByDate[k] > maxHeads) maxHeads = headsByDate[k]; });
+
+    heatEl.querySelectorAll(".cal-day[data-date]").forEach(function (cell) {
+      var key = cell.getAttribute("data-date");
+      var heads = headsByDate[key] || 0;
+      cell.classList.remove("top1");
+      if (heads > 0) {
+        var ratio = maxHeads ? heads / maxHeads : 0;
+        cell.style.background = "rgba(var(--heat), " + (0.08 + ratio * 0.87) + ")";
+        cell.style.borderColor = "transparent";
+        cell.style.color = ratio > 0.55 ? "#fff" : "var(--ink)";
+        cell.textContent = heads;
+        cell.title = fmtDateLabel(key) + " — " + heads + " available";
+      } else {
+        cell.style.background = "";
+        cell.style.borderColor = "";
+        cell.style.color = "";
+        cell.textContent = cell.getAttribute("data-date").slice(-2).replace(/^0/, "");
+        cell.title = "";
+      }
+    });
+
+    var ranked = Object.keys(headsByDate)
+      .map(function (k) { return { key: k, heads: headsByDate[k], houses: housesByDate[k] }; })
+      .sort(function (a, b) { return b.heads - a.heads || b.houses - a.houses || a.key.localeCompare(b.key); })
+      .slice(0, 8);
+
+    if (ranked.length) {
+      heatEl.querySelectorAll('.cal-day[data-date="' + ranked[0].key + '"]').forEach(function (c) { c.classList.add("top1"); });
+    }
+
+    var topDaysEl = document.getElementById("topDays");
+    if (!ranked.length) {
+      topDaysEl.innerHTML = '<div class="top-days-empty">No picks yet — be the first to mark a day.</div>';
+    } else {
+      topDaysEl.innerHTML = "<ol>" + ranked.map(function (r) {
+        return "<li><span class=\\"td-date\\">" + fmtDateLabel(r.key) + "</span>" +
+          "<span class=\\"td-count\\">" + r.heads + (r.heads === 1 ? " person" : " people") + " · " + r.houses + (r.houses === 1 ? " household" : " households") + "</span></li>";
+      }).join("") + "</ol>";
+    }
   }
 
   function renderRoster(ballots) {
     var el = document.getElementById("roster");
     document.getElementById("rosterKicker").textContent = ballots.length ? "In order of filing" : "";
+    document.getElementById("heatKicker").textContent = ballots.length + (ballots.length === 1 ? " ballot cast" : " ballots cast");
     if (!ballots.length) {
-      el.innerHTML = '<div class="roster-empty">No ballots filed yet. Be the first in the box score.</div>';
+      el.innerHTML = '<div class="roster-empty">No ballots filed yet. Be the first to mark a day.</div>';
       return;
     }
     el.innerHTML = ballots.map(function (b) {
-      var yesCount = Object.values(b.picks || {}).filter(function (v) { return v === "yes"; }).length;
+      var dayCount = Object.values(b.picks || {}).filter(function (v) { return v === "yes"; }).length;
       return '<div class="roster-row">' +
         '<span class="roster-name">' + escapeHtml(b.name) + (b.household ? ' <span class="roster-meta">(' + escapeHtml(b.household) + ')</span>' : '') + '</span>' +
-        '<span class="roster-meta">' + (b.party_size > 1 ? b.party_size + " people · " : "") + yesCount + " window" + (yesCount === 1 ? "" : "s") + " marked yes</span>" +
+        '<span class="roster-meta">' + (b.party_size > 1 ? b.party_size + " people · " : "") + dayCount + " day" + (dayCount === 1 ? "" : "s") + " marked</span>" +
         '</div>';
     }).join("");
   }
@@ -403,21 +471,46 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 
   var currentCode = null;
 
+  function findMyBallot(ballots) {
+    var name = document.getElementById("fName").value.trim().toLowerCase();
+    var household = document.getElementById("fHousehold").value.trim().toLowerCase();
+    if (!name) return null;
+    return ballots.filter(function (b) {
+      return b.name.trim().toLowerCase() === name && (b.household || "").trim().toLowerCase() === household;
+    })[0] || null;
+  }
+
   function loadData() {
     return fetch(API + "?code=" + encodeURIComponent(currentCode))
       .then(function (r) { if (!r.ok) throw new Error("bad code"); return r.json(); })
       .then(function (data) {
-        renderStandings(data.ballots || []);
-        renderRoster(data.ballots || []);
+        var ballots = data.ballots || [];
+        renderHeat(ballots);
+        renderRoster(ballots);
+        return ballots;
       });
   }
 
   function enterGate(code) {
     currentCode = code;
-    return loadData().then(function () {
+    return loadData().then(function (ballots) {
       localStorage.setItem(codeKey, code);
       document.getElementById("gate").style.display = "none";
       document.getElementById("app").style.display = "block";
+
+      var savedIdentity = JSON.parse(localStorage.getItem(identityKey) || "null");
+      if (savedIdentity) {
+        document.getElementById("fName").value = savedIdentity.name || "";
+        document.getElementById("fHousehold").value = savedIdentity.household || "";
+        document.getElementById("fParty").value = savedIdentity.partySize || 1;
+        document.getElementById("fNote").value = savedIdentity.note || "";
+      }
+      var mine = findMyBallot(ballots);
+      if (mine) {
+        myPicks = Object.assign({}, mine.picks);
+        refreshPickerSelection();
+        setStatus("Welcome back — your picks are loaded. Tap a day to change it.", "ok");
+      }
     });
   }
 
@@ -439,50 +532,74 @@ footer p { font-size: 0.7rem; color: var(--muted); }
     enterGate(savedCode).catch(function () { localStorage.removeItem(codeKey); });
   }
 
-  document.getElementById("ballotForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var msg = document.getElementById("ballotMsg");
-    var btn = document.getElementById("submitBtn");
+  // ── Auto-save ────────────────────────────────────────────────────────
+  var saveTimer = null;
+  var saving = false;
+  var saveAgainAfter = false;
+
+  function setStatus(text, cls) {
+    var el = document.getElementById("saveStatus");
+    el.textContent = text;
+    el.className = "save-status" + (cls ? " " + cls : "");
+  }
+
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(doSave, 600);
+  }
+
+  function doSave() {
     var name = document.getElementById("fName").value.trim();
+    if (!name) {
+      setStatus("Add your name above, then tap days on the calendar below.");
+      return;
+    }
+    if (Object.keys(myPicks).length === 0) {
+      setStatus("Tap a day on the calendar below to save your availability.");
+      return;
+    }
+    if (saving) { saveAgainAfter = true; return; }
+    saving = true;
+
     var household = document.getElementById("fHousehold").value.trim();
     var partySize = parseInt(document.getElementById("fParty").value, 10) || 1;
     var note = document.getElementById("fNote").value.trim();
 
-    var cleanPicks = {};
-    Object.keys(picks).forEach(function (k) { if (picks[k]) cleanPicks[k] = picks[k]; });
-
-    msg.className = "ballot-msg";
-    btn.disabled = true;
-    btn.textContent = "Filing…";
+    localStorage.setItem(identityKey, JSON.stringify({ name: name, household: household, partySize: partySize, note: note }));
+    setStatus("Saving…");
 
     fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: currentCode, name: name, household: household, partySize: partySize, picks: cleanPicks, note: note }),
+      body: JSON.stringify({ code: currentCode, name: name, household: household, partySize: partySize, picks: myPicks, note: note }),
     })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
       .then(function (res) {
         if (!res.ok) throw new Error(res.body.error || "Something went wrong.");
-        msg.textContent = res.body.message || "Filed.";
-        msg.className = "ballot-msg ok";
+        setStatus("Saved — " + Object.keys(myPicks).length + " day" + (Object.keys(myPicks).length === 1 ? "" : "s") + " marked.", "ok");
         return loadData();
       })
       .catch(function (err) {
-        msg.textContent = err.message;
-        msg.className = "ballot-msg err";
+        setStatus(err.message, "err");
       })
       .finally(function () {
-        btn.disabled = false;
-        btn.textContent = "→ File Ballot";
+        saving = false;
+        if (saveAgainAfter) { saveAgainAfter = false; scheduleSave(); }
       });
+  }
+
+  ["fName", "fHousehold", "fParty", "fNote"].forEach(function (id) {
+    document.getElementById(id).addEventListener("change", function () {
+      if (Object.keys(myPicks).length > 0) scheduleSave();
+    });
   });
 })();
 </script>
 
 <script type="module">
 // Decoration only — isolated from the functional script above on purpose. If this CDN
-// import ever fails, the ballot form and standings table above still work perfectly; only
-// the motion is lost. See reunion-site/worker.js's own history for why this split matters.
+// import ever fails, the calendar and standings above still work perfectly; only the
+// motion is lost. See reunion-site/worker.js's own history for why this split matters.
 import { animate, stagger, inView } from 'https://cdn.jsdelivr.net/npm/motion@11/+esm';
 
 animate(".masthead h1", { opacity: [0, 1], y: [-16, 0] }, { duration: 0.6, easing: "ease-out" });
@@ -495,28 +612,24 @@ inView(".section", function (el) {
   animate(el, { opacity: [0.4, 1], y: [24, 0] }, { duration: 0.5, easing: "ease-out" });
 }, { margin: "-60px" });
 
-// Stagger box score rows in whenever the table's contents change.
-var boxscoreBody = document.getElementById("boxscoreBody");
-if (boxscoreBody) {
-  var mo = new MutationObserver(function () {
-    animate(boxscoreBody.querySelectorAll("tr"), { opacity: [0, 1], x: [-8, 0] }, { delay: stagger(0.04), duration: 0.35 });
-  });
-  mo.observe(boxscoreBody, { childList: true });
-}
+// Stagger each month's grid in once, on first paint.
+document.querySelectorAll(".cal-months").forEach(function (group) {
+  animate(group.querySelectorAll(".cal-month-name"), { opacity: [0, 1], y: [8, 0] }, { delay: stagger(0.08), duration: 0.4 });
+});
 
+document.addEventListener("click", function (e) {
+  var day = e.target.closest(".cal-day:not(.blank):not(.heat-day)");
+  if (day) animate(day, { scale: [0.8, 1] }, { duration: 0.25, easing: [0.34, 1.56, 0.64, 1] });
+});
+
+// Re-flash the roster whenever it updates.
 var roster = document.getElementById("roster");
 if (roster) {
-  var mo2 = new MutationObserver(function () {
+  var mo = new MutationObserver(function () {
     animate(roster.querySelectorAll(".roster-row"), { opacity: [0, 1] }, { delay: stagger(0.03), duration: 0.3 });
   });
-  mo2.observe(roster, { childList: true });
+  mo.observe(roster, { childList: true });
 }
-
-document.querySelectorAll(".pick-toggle button").forEach(function (btn) {
-  btn.addEventListener("click", function () {
-    animate(btn, { scale: [0.85, 1] }, { duration: 0.25, easing: [0.34, 1.56, 0.64, 1] });
-  });
-});
 </script>
 
 </body>

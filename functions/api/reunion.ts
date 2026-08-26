@@ -89,14 +89,15 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
     const partySize = Math.min(Math.max(Math.round(Number(body.partySize) || 1), 1), 30);
     const note = body.note?.trim().slice(0, 280) || null;
 
-    // Keep only well-formed votes; the page's slate is the source of truth for
-    // which windows get displayed, so unknown ids are simply carried along.
+    // Keep only well-formed votes; the page's calendar is the source of truth for which
+    // dates are selectable, so unknown keys (e.g. dates outside the polled months) are
+    // simply carried along rather than rejected here.
     const picks: Record<string, Vote> = {};
     for (const [k, v] of Object.entries(body.picks ?? {})) {
       if (typeof k === "string" && k.length <= 40 && VOTES.includes(v as Vote)) picks[k] = v as Vote;
     }
     if (Object.keys(picks).length === 0) {
-      return Response.json({ error: "Mark at least one window before you file." }, { status: 400, headers: CORS });
+      return Response.json({ error: "Mark at least one day before you file." }, { status: 400, headers: CORS });
     }
 
     // Same name + same household = an amended ballot, not a second voter.
