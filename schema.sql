@@ -50,3 +50,15 @@ CREATE TABLE IF NOT EXISTS action_tokens (
   used INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS reunion_rsvps (
+  id TEXT PRIMARY KEY,
+  name_key TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  household TEXT,
+  party_size INTEGER NOT NULL DEFAULT 1,
+  picks TEXT NOT NULL,
+  note TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
