@@ -40,181 +40,185 @@ const PAGE = `<!doctype html>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --paper: #EEE7D6;
-  --paper-dark: #E4DBC4;
-  --ink: #1C1A16;
-  --ink-soft: #4A453C;
-  --rule: #1C1A16;
-  --red: #9C2B22;
-  --gold: #A9822C;
-  --win: #2F5233;
-  --loss: #9C2B22;
+  --bg: #FFFFFF;
+  --bg-soft: #F6F6F4;
+  --ink: #111111;
+  --muted: #6B6B6B;
+  --rule: #111111;
+  --line: #DDDDDD;
+  --win: #1D6B3A;
+  --loss: #B3261E;
+  --accent: #111111;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
-  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-family: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
   min-height: 100vh;
   position: relative;
+  font-feature-settings: 'tnum' 1;
 }
-/* Newsprint halftone texture */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  opacity: 0.05;
-  background-image: radial-gradient(circle, #000 0.6px, transparent 0.6px);
-  background-size: 3px 3px;
-  mix-blend-mode: multiply;
-}
-.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 100px; }
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 100px; }
 
 /* ── MASTHEAD ────────────────────────────────────────────── */
-.masthead { padding: 28px 0 0; text-align: center; }
-.masthead-top {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--ink-soft); border-bottom: 1px solid var(--ink); padding-bottom: 8px;
+.masthead-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 0 16px;
+}
+.wordmark { display: flex; align-items: center; gap: 9px; }
+.wordmark .mark {
+  width: 20px; height: 20px; border: 2px solid var(--ink);
+  transform: rotate(45deg); flex-shrink: 0;
+}
+.wordmark span { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+.edition-pill {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+}
+.rule-double { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); height: 3px; }
+
+.masthead { padding: 30px 0 6px; text-align: center; }
+.masthead-date {
+  font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 0.95rem;
+  color: var(--muted); margin-bottom: 10px;
 }
 .masthead h1 {
-  font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
-  font-size: clamp(2.6rem, 9vw, 5rem); line-height: 0.95; letter-spacing: -0.01em;
-  padding: 18px 0 10px;
+  font-family: 'Source Serif 4', Georgia, serif; font-weight: 700;
+  font-size: clamp(2rem, 6.5vw, 3.1rem); line-height: 1.05; letter-spacing: -0.01em;
 }
 .masthead-tag {
-  font-family: 'Oswald', sans-serif; font-size: clamp(0.7rem, 2vw, 0.95rem);
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+  font-size: 0.8rem; color: var(--muted); margin-top: 10px;
 }
-.rule-thick { height: 5px; background: var(--ink); margin-top: 16px; }
-.rule-thin { height: 1px; background: var(--ink); margin-top: 3px; margin-bottom: 22px; }
+.rule-thin { height: 1px; background: var(--ink); margin-top: 22px; margin-bottom: 0; }
 
 /* ── GATE ────────────────────────────────────────────────── */
-.gate { max-width: 420px; margin: 60px auto; text-align: center; }
-.gate p { font-family: 'Courier Prime', monospace; font-size: 0.85rem; line-height: 1.7; color: var(--ink-soft); margin-bottom: 20px; }
+.gate { max-width: 400px; margin: 56px auto; text-align: center; }
+.gate p { font-size: 0.9rem; line-height: 1.7; color: var(--muted); margin-bottom: 20px; }
 .gate input {
-  width: 100%; padding: 14px 16px; font-family: 'Courier Prime', monospace; font-size: 0.95rem;
-  letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
-  background: var(--paper-dark); border: 2px solid var(--ink); color: var(--ink); outline: none;
+  width: 100%; padding: 13px 16px; font-family: inherit; font-size: 0.95rem;
+  letter-spacing: 0.03em; text-align: center;
+  background: var(--bg-soft); border: 1.5px solid var(--ink); color: var(--ink); outline: none; border-radius: 4px;
 }
 .gate button, .btn {
-  font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  font-size: 0.8rem; padding: 14px 20px; background: var(--red); color: var(--paper);
-  border: none; cursor: pointer; width: 100%; margin-top: 12px; transition: transform 0.15s, background 0.15s;
+  font-family: inherit; font-weight: 600; letter-spacing: 0.01em;
+  font-size: 0.85rem; padding: 13px 20px; background: var(--ink); color: #fff;
+  border: none; cursor: pointer; width: 100%; margin-top: 12px; border-radius: 4px; transition: transform 0.15s, opacity 0.15s;
 }
-.gate button:hover, .btn:hover:not(:disabled) { background: var(--ink); }
+.gate button:hover, .btn:hover:not(:disabled) { opacity: 0.82; }
 .gate button:active, .btn:active:not(:disabled) { transform: scale(0.98); }
-.gate-error { color: var(--red); font-family: 'Courier Prime', monospace; font-size: 0.8rem; margin-top: 12px; display: none; }
+.gate-error { color: var(--loss); font-size: 0.82rem; margin-top: 12px; display: none; }
 
 /* ── SECTIONS ────────────────────────────────────────────── */
 #app { display: none; }
-.section { margin-top: 44px; }
+/* Visible by default — the inView reveal below is a bonus effect, never a requirement.
+   #app starts as display:none until the async family-code check resolves, so a section
+   already in the initial viewport can miss its IntersectionObserver callback entirely and
+   get stuck at opacity 0 forever if visibility depended on that firing. */
+.section { margin-top: 48px; opacity: 1; }
 .section-head {
-  display: flex; align-items: baseline; gap: 12px; border-bottom: 3px solid var(--ink); padding-bottom: 6px; margin-bottom: 18px;
+  display: flex; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 20px;
 }
 .section-head h2 {
-  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
-  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  font-family: 'Source Serif 4', Georgia, serif; font-weight: 700;
+  font-size: clamp(1.3rem, 4vw, 1.6rem);
 }
 .section-head .kicker {
-  font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--ink-soft); margin-left: auto;
+  font-size: 0.72rem; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--muted); margin-left: auto;
 }
 .lede {
-  font-family: 'Playfair Display', serif; font-size: clamp(1.05rem, 2.6vw, 1.25rem); line-height: 1.6;
-  color: var(--ink-soft); font-style: italic; max-width: 640px;
+  font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1rem, 2.4vw, 1.15rem); line-height: 1.6;
+  color: var(--muted); max-width: 640px;
 }
-.lede strong { color: var(--ink); font-style: normal; }
+.lede strong { color: var(--ink); font-weight: 700; }
 
 /* ── BOX SCORE TABLE ─────────────────────────────────────── */
-.boxscore { width: 100%; border-collapse: collapse; font-family: 'Courier Prime', monospace; font-size: 0.8rem; }
-.boxscore th, .boxscore td { padding: 10px 8px; text-align: center; border: 1px solid var(--ink); }
+.boxscore { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.boxscore th, .boxscore td { padding: 11px 8px; text-align: center; }
+.boxscore thead th { border-bottom: 2px solid var(--ink); }
+.boxscore tbody tr { border-bottom: 1px solid var(--line); }
+.boxscore tbody tr:last-child { border-bottom: none; }
 .boxscore th {
-  background: var(--ink); color: var(--paper); font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; font-size: 0.65rem;
+  font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.68rem; color: var(--muted);
 }
-.boxscore td.window-cell { text-align: left; font-family: 'Oswald', sans-serif; }
-.boxscore td.window-cell .w-label { font-weight: 700; letter-spacing: 0.06em; }
-.boxscore td.window-cell .w-dates { display: block; font-size: 0.65rem; color: var(--ink-soft); font-family: 'Courier Prime', monospace; margin-top: 2px; }
-.boxscore tr:nth-child(even) td { background: var(--paper-dark); }
-.boxscore tr.leader td { background: #DCE8DC; }
-.boxscore tr.leader td.window-cell .w-label::before { content: '\\2605  '; color: var(--gold); }
+.boxscore td.window-cell { text-align: left; }
+.boxscore td.window-cell .w-label { font-weight: 700; letter-spacing: 0.01em; }
+.boxscore td.window-cell .w-dates { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.boxscore tr.leader td.window-cell .w-label::before { content: '\\2605  '; color: var(--ink); }
 .boxscore .pct { font-weight: 700; }
-.boxscore .w-count { color: var(--win); font-weight: 700; }
+.boxscore .w-count { color: var(--win); font-weight: 600; }
 .boxscore .l-count { color: var(--loss); }
 .bs-scroll { overflow-x: auto; }
-.bs-note { font-family: 'Courier Prime', monospace; font-size: 0.65rem; color: var(--ink-soft); margin-top: 10px; line-height: 1.6; }
+.bs-note { font-size: 0.72rem; color: var(--muted); margin-top: 12px; line-height: 1.6; }
 
 /* ── BALLOT FORM ─────────────────────────────────────────── */
 .ballot {
-  background: var(--paper-dark); border: 2px dashed var(--ink); padding: clamp(18px,4vw,32px);
-  position: relative;
-}
-.ballot::before {
-  content: 'CLIP & FILE'; position: absolute; top: -11px; left: 24px; background: var(--paper);
-  padding: 0 10px; font-family: 'Courier Prime', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--ink-soft);
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 8px; padding: clamp(18px,4vw,32px);
 }
 .field { margin-bottom: 18px; }
 .field label {
-  display: block; font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px;
+  display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
 }
 .field input, .field textarea {
-  width: 100%; padding: 11px 13px; font-family: 'Oswald', sans-serif; font-size: 0.9rem;
-  background: var(--paper); border: 1.5px solid var(--ink); color: var(--ink); outline: none; resize: vertical;
+  width: 100%; padding: 11px 13px; font-family: inherit; font-size: 0.92rem;
+  background: #fff; border: 1.5px solid var(--line); color: var(--ink); outline: none; resize: vertical; border-radius: 4px;
 }
+.field input:focus, .field textarea:focus { border-color: var(--ink); }
 .field-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
 @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
 
 .pick-row {
   display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;
-  padding: 10px 0; border-bottom: 1px solid var(--ink-soft); border-bottom-style: dotted;
+  padding: 11px 0; border-bottom: 1px solid var(--line);
 }
 .pick-row:last-of-type { border-bottom: none; }
-.pick-info .w-label { font-weight: 600; letter-spacing: 0.04em; }
-.pick-info .w-meta { display: block; font-family: 'Courier Prime', monospace; font-size: 0.65rem; color: var(--ink-soft); margin-top: 2px; }
+.pick-info .w-label { font-weight: 600; }
+.pick-info .w-meta { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 .pick-toggle { display: flex; gap: 4px; }
 .pick-toggle button {
-  font-family: 'Courier Prime', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; padding: 8px 10px; background: var(--paper); border: 1.5px solid var(--ink);
-  color: var(--ink-soft); cursor: pointer; min-width: 52px; transition: all 0.12s;
+  font-family: inherit; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em;
+  padding: 8px 12px; background: #fff; border: 1.5px solid var(--line); border-radius: 4px;
+  color: var(--muted); cursor: pointer; min-width: 52px; transition: all 0.12s;
 }
-.pick-toggle button[data-v="yes"].active { background: var(--win); border-color: var(--win); color: var(--paper); }
-.pick-toggle button[data-v="maybe"].active { background: var(--gold); border-color: var(--gold); color: var(--ink); }
-.pick-toggle button[data-v="no"].active { background: var(--loss); border-color: var(--loss); color: var(--paper); }
+.pick-toggle button[data-v="yes"].active { background: var(--win); border-color: var(--win); color: #fff; }
+.pick-toggle button[data-v="maybe"].active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.pick-toggle button[data-v="no"].active { background: var(--loss); border-color: var(--loss); color: #fff; }
 
-.ballot-msg { font-family: 'Courier Prime', monospace; font-size: 0.8rem; padding: 12px 14px; margin-top: 16px; display: none; }
-.ballot-msg.ok { display: block; background: #DCE8DC; border: 1.5px solid var(--win); color: var(--win); }
-.ballot-msg.err { display: block; background: #F0DAD6; border: 1.5px solid var(--red); color: var(--red); }
+.ballot-msg { font-size: 0.85rem; padding: 12px 14px; margin-top: 16px; display: none; border-radius: 4px; }
+.ballot-msg.ok { display: block; background: #EAF4EC; border: 1px solid var(--win); color: var(--win); }
+.ballot-msg.err { display: block; background: #FBEAE9; border: 1px solid var(--loss); color: var(--loss); }
 
 /* ── ROSTER ──────────────────────────────────────────────── */
-.roster { display: grid; gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
-.roster-row { background: var(--paper); padding: 12px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
-.roster-name { font-family: 'Oswald', sans-serif; font-weight: 600; }
-.roster-meta { font-family: 'Courier Prime', monospace; font-size: 0.68rem; color: var(--ink-soft); }
-.roster-empty { font-family: 'Courier Prime', monospace; font-size: 0.8rem; color: var(--ink-soft); padding: 20px 0; text-align: center; }
+.roster { border-top: 1px solid var(--line); }
+.roster-row { padding: 13px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.roster-name { font-weight: 600; }
+.roster-meta { font-size: 0.75rem; color: var(--muted); }
+.roster-empty { font-size: 0.88rem; color: var(--muted); padding: 24px 0; text-align: center; }
 
-footer { text-align: center; margin-top: 70px; padding-top: 18px; border-top: 1px solid var(--ink); }
-footer p { font-family: 'Courier Prime', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+footer { text-align: center; margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line); }
+footer p { font-size: 0.7rem; color: var(--muted); }
 </style>
 </head>
 <body>
 
 <div class="wrap">
+  <div class="masthead-bar">
+    <div class="wordmark"><span class="mark"></span><span>Reunion Gazette</span></div>
+    <span class="edition-pill">Family Edition · ${REUNION_YEAR}</span>
+  </div>
+  <div class="rule-double"></div>
+
   <div class="masthead">
-    <div class="masthead-top">
-      <span id="editionDate">--</span>
-      <span>Family Edition · Est. ${REUNION_YEAR}</span>
-    </div>
+    <div class="masthead-date" id="editionDate">--</div>
     <h1>The Reunion Gazette</h1>
     <div class="masthead-tag">Every Vote Filed — Every Date Contested</div>
   </div>
-  <div class="rule-thick"></div>
   <div class="rule-thin"></div>
 
   <div class="gate" id="gate">
@@ -485,7 +489,10 @@ animate(".masthead h1", { opacity: [0, 1], y: [-16, 0] }, { duration: 0.6, easin
 animate(".masthead-tag", { opacity: [0, 1] }, { duration: 0.6, delay: 0.2 });
 
 inView(".section", function (el) {
-  animate(el, { opacity: [0, 1], y: [24, 0] }, { duration: 0.5, easing: "ease-out" });
+  // Fades from partial, not 0 — CSS already keeps this at opacity:1 by default (see
+  // worker.js's own comment on .section), so this is purely a bonus flourish that can
+  // never leave a section looking blank even if it fires at an odd moment.
+  animate(el, { opacity: [0.4, 1], y: [24, 0] }, { duration: 0.5, easing: "ease-out" });
 }, { margin: "-60px" });
 
 // Stagger box score rows in whenever the table's contents change.
