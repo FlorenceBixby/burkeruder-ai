@@ -68,4 +68,14 @@ export const projects: Project[] = [
     status: "wip",
     year: "2026",
   },
+  {
+    id: "ironman",
+    title: "The Belafonte",
+    chapter: "Exhibit Golf",
+    description: "A solitary captain outfits an expedition vessel — red beanies mandatory — for the longest voyage of his career: 2.4 miles of open water, 112 by bicycle, 26.2 on foot. Crewed by three small deckhands who never signed the waiver. Sharks, imagined or otherwise, unconfirmed.",
+    tags: ["Ironman", "Training Log", "Endurance"],
+    status: "live",
+    href: "https://ironman.burkeruder.ai",
+    year: "2026",
+  },
 ];
