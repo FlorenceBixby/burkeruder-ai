@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS reunion_rsvps (
   party_size INTEGER NOT NULL DEFAULT 1,
   picks TEXT NOT NULL,
   note TEXT,
+  attendees TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
