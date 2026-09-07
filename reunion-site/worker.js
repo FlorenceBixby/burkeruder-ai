@@ -100,11 +100,35 @@ body {
 
 /* ── MASTHEAD ────────────────────────────────────────────── */
 .masthead-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 22px 0 16px;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  gap: 12px; padding: 22px 0 16px;
 }
-.wordmark { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); }
-.wordmark:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.masthead-bar .wordmark { grid-area: wm; justify-self: start; }
+.masthead-bar .published-by { grid-area: pub; justify-self: center; }
+.masthead-bar .edition-pill { grid-area: pill; justify-self: end; }
+.published-by {
+  font-size: 0.7rem; letter-spacing: 0.04em; color: var(--muted);
+  text-align: center; white-space: nowrap;
+}
+.published-by a {
+  color: var(--ink); font-weight: 700; text-decoration: none;
+  border-bottom: 1px solid var(--line); padding-bottom: 1px;
+}
+.published-by a:hover { border-bottom-color: var(--ink); }
+.published-by a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* Too much for one line on a phone — the byline drops to its own centred row. */
+@media (max-width: 640px) {
+  .masthead-bar {
+    grid-template-columns: auto auto;
+    grid-template-areas: "wm pill" "pub pub";
+    row-gap: 10px;
+  }
+}
+@media (min-width: 641px) {
+  .masthead-bar { grid-template-areas: "wm pub pill"; }
+}
+.wordmark { display: flex; align-items: center; gap: 9px; color: var(--ink); }
 .wordmark .mark {
   width: 20px; height: 20px; border: 2px solid var(--ink);
   transform: rotate(45deg); flex-shrink: 0;
@@ -320,13 +344,7 @@ body {
 
 footer { text-align: center; margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line); }
 footer p { font-size: 0.7rem; color: var(--muted); }
-.colophon { margin-top: 8px; }
-.colophon a {
-  color: var(--ink); font-weight: 600; text-decoration: none;
-  border-bottom: 1px solid var(--line); padding-bottom: 1px;
-}
-.colophon a:hover { border-bottom-color: var(--ink); }
-.colophon a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -340,9 +358,8 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 
 <div class="wrap">
   <div class="masthead-bar">
-    <a class="wordmark" href="https://burkeruder.ai" target="_blank" rel="noopener noreferrer" title="Visit burkeruder.ai">
-      <span class="mark"></span><span>Reunion Gazette</span>
-    </a>
+    <div class="wordmark"><span class="mark"></span><span>Reunion Gazette</span></div>
+    <div class="published-by">Published by <a href="https://burkeruder.ai" target="_blank" rel="noopener noreferrer">burkeruder.ai</a></div>
     <span class="edition-pill">Family Edition · ${REUNION_YEAR}</span>
   </div>
   <div class="rule-double"></div>
@@ -430,10 +447,6 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 
   <footer>
     <p>The Reunion Gazette · Not affiliated with any newspaper that could sue us</p>
-    <p class="colophon">
-      Published by <a href="https://burkeruder.ai" target="_blank" rel="noopener noreferrer">burkeruder.ai</a>
-      — photographs, projects, and other diversions.
-    </p>
   </footer>
 </div>
 
@@ -1024,12 +1037,21 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 import { animate, stagger, inView, scroll, spring } from 'https://cdn.jsdelivr.net/npm/motion@11.18.2/+esm';
 
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Motion must never own whether something is *visible*. A page loaded into a background
+// tab — which is exactly what happens when someone opens the link from Facebook and
+// doesn't switch to it — starts its entrance animations and then freezes them at the
+// first keyframe. For an opacity:[0,1] entrance that leaves the masthead and the gate
+// sitting at opacity 0 on a blank white page until the tab is focused. So entrances only
+// run when the page is actually being looked at; otherwise the CSS defaults stand and
+// everything is simply there.
+var hiddenAtLoad = document.hidden;
 var softSpring = { type: spring, stiffness: 320, damping: 26 };
 var popSpring = { type: spring, stiffness: 520, damping: 18 };
 
 function motionOn(name, fn) { document.addEventListener(name, fn); }
 
-if (!reduced) {
+if (!reduced && !hiddenAtLoad) {
   // ── Scroll-linked read-through bar ─────────────────────────────────────
   scroll(animate("#scrollProgress", { scaleX: [0, 1] }, { ease: "linear" }));
 
@@ -1037,6 +1059,7 @@ if (!reduced) {
   animate(".wordmark .mark", { rotate: [0, 225], scale: [0.4, 1] }, { duration: 0.9, ease: [0.22, 1, 0.36, 1] });
   animate(".wordmark span", { opacity: [0, 1], x: [-10, 0] }, { duration: 0.5, delay: 0.15 });
   animate(".edition-pill", { opacity: [0, 1], x: [10, 0] }, { duration: 0.5, delay: 0.2 });
+  animate(".published-by", { opacity: [0, 1], y: [-6, 0] }, { duration: 0.5, delay: 0.28 });
   animate(".rule-double", { scaleX: [0, 1] }, { duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] });
   document.querySelector(".rule-double").style.transformOrigin = "0 50%";
   animate(".masthead-date", { opacity: [0, 1] }, { duration: 0.5, delay: 0.3 });
@@ -1064,6 +1087,7 @@ if (!reduced) {
 
   // ── Entering the newsroom ──────────────────────────────────────────────
   motionOn("gazette:entered", function () {
+    if (document.hidden) return;
     animate("#app", { opacity: [0, 1] }, { duration: 0.45 });
     animate("#lede", { opacity: [0, 1], y: [12, 0] }, { duration: 0.5, delay: 0.05 });
     animate(".dateline", { opacity: [0, 1], x: [-10, 0] }, Object.assign({ delay: 0.25 }, softSpring));
@@ -1197,11 +1221,11 @@ if (!reduced) {
 
   // The way back to the main site gets a hover nudge.
   document.addEventListener("pointerover", function (e) {
-    var a = e.target.closest(".colophon a, .wordmark");
+    var a = e.target.closest(".published-by a");
     if (a && !a.dataset.hovering) { a.dataset.hovering = "1"; animate(a, { y: -2 }, softSpring); }
   });
   document.addEventListener("pointerout", function (e) {
-    var a = e.target.closest(".colophon a, .wordmark");
+    var a = e.target.closest(".published-by a");
     if (a && !a.contains(e.relatedTarget)) { delete a.dataset.hovering; animate(a, { y: 0 }, softSpring); }
   });
   inView("footer", function (entry) {
