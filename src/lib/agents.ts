@@ -68,6 +68,16 @@ export const agents: Agent[] = [
     trigger: "concept",
   },
   {
+    id: "sailing-master",
+    title: "The Sailing Master",
+    chapter: "Sailing Master",
+    description:
+      "Reads the morning's readiness signal, checks the week's training budget against what's already logged, and charts the day's session onto the calendar before the crew is even awake.",
+    cadence: "Daily · ~9:30am CT",
+    trigger: "scheduled",
+    source: { kind: "github-actions", repo: "FlorenceBixby/burke-portfolio", workflow: "training-calendar-sync.yml" },
+  },
+  {
     id: "newsletter-desk",
     title: "The Newsletter Desk",
     chapter: "Ship's Cook",
