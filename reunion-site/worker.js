@@ -103,7 +103,8 @@ body {
   display: flex; justify-content: space-between; align-items: center;
   padding: 22px 0 16px;
 }
-.wordmark { display: flex; align-items: center; gap: 9px; }
+.wordmark { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); }
+.wordmark:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .wordmark .mark {
   width: 20px; height: 20px; border: 2px solid var(--ink);
   transform: rotate(45deg); flex-shrink: 0;
@@ -319,6 +320,13 @@ body {
 
 footer { text-align: center; margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--line); }
 footer p { font-size: 0.7rem; color: var(--muted); }
+.colophon { margin-top: 8px; }
+.colophon a {
+  color: var(--ink); font-weight: 600; text-decoration: none;
+  border-bottom: 1px solid var(--line); padding-bottom: 1px;
+}
+.colophon a:hover { border-bottom-color: var(--ink); }
+.colophon a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -332,7 +340,9 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 
 <div class="wrap">
   <div class="masthead-bar">
-    <div class="wordmark"><span class="mark"></span><span>Reunion Gazette</span></div>
+    <a class="wordmark" href="https://burkeruder.ai" target="_blank" rel="noopener noreferrer" title="Visit burkeruder.ai">
+      <span class="mark"></span><span>Reunion Gazette</span>
+    </a>
     <span class="edition-pill">Family Edition · ${REUNION_YEAR}</span>
   </div>
   <div class="rule-double"></div>
@@ -420,6 +430,10 @@ footer p { font-size: 0.7rem; color: var(--muted); }
 
   <footer>
     <p>The Reunion Gazette · Not affiliated with any newspaper that could sue us</p>
+    <p class="colophon">
+      Published by <a href="https://burkeruder.ai" target="_blank" rel="noopener noreferrer">burkeruder.ai</a>
+      — photographs, projects, and other diversions.
+    </p>
   </footer>
 </div>
 
@@ -1179,6 +1193,20 @@ if (!reduced) {
     var chips = document.querySelectorAll("#roster .roster-chip");
     if (chips.length) animate(chips, { opacity: [0, 1], scale: [0.8, 1] },
       { delay: stagger(0.025, { startDelay: 0.2 }), duration: 0.35, ease: [0.34, 1.56, 0.64, 1] });
+  });
+
+  // The way back to the main site gets a hover nudge.
+  document.addEventListener("pointerover", function (e) {
+    var a = e.target.closest(".colophon a, .wordmark");
+    if (a && !a.dataset.hovering) { a.dataset.hovering = "1"; animate(a, { y: -2 }, softSpring); }
+  });
+  document.addEventListener("pointerout", function (e) {
+    var a = e.target.closest(".colophon a, .wordmark");
+    if (a && !a.contains(e.relatedTarget)) { delete a.dataset.hovering; animate(a, { y: 0 }, softSpring); }
+  });
+  inView("footer", function (entry) {
+    var el = entry && entry.target ? entry.target : entry;
+    animate(el.querySelectorAll("p"), { opacity: [0, 1], y: [8, 0] }, { delay: stagger(0.08), duration: 0.5 });
   });
 
   // Kickers re-count themselves whenever fresh data lands.
