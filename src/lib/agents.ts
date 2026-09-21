@@ -12,12 +12,39 @@ export interface Agent {
   cadence: string;
   trigger: AgentTrigger;
   source?: AgentSource;
+  /** Who this agent reports to. The Chief of Staff reports to Burke. */
+  reportsTo?: string;
+  /** Marks the supervisor card — rendered first, with its reports listed under it. */
+  supervisor?: boolean;
 }
 
 // Personal automations only (burke.ruder@gmail.com side). Anything doing work
 // on behalf of The Interesting Group lives on TIG's own ops dashboard instead —
 // keeps this site from double-counting agents that are already tracked there.
 export const agents: Agent[] = [
+  {
+    id: "chief-of-staff",
+    title: "Burke's Chief of Staff",
+    chapter: "First Mate",
+    description:
+      "The supervisor every personal agent reports to. Keeps the ledger of what they've flagged, notices when one goes quiet, and surfaces anything that actually needs Burke — in the tools he works in, not by email.",
+    cadence: "Always on · Cloudflare Durable Object",
+    trigger: "event-driven",
+    source: { kind: "cloudflare-worker", script: "chief-of-staff" },
+    supervisor: true,
+    reportsTo: "Burke",
+  },
+  {
+    id: "hull-inspector",
+    title: "The Hull Inspector",
+    chapter: "Ship's Engineer",
+    description:
+      "Walks every repo once a day looking for known-vulnerable dependencies, merges the safe fixes on its own, and hands anything risky to a human instead of guessing.",
+    cadence: "Daily · 8am CT",
+    trigger: "scheduled",
+    source: { kind: "cloudflare-worker", script: "security-agent" },
+    reportsTo: "Chief of Staff",
+  },
   {
     id: "inbox-custodian",
     title: "The Inbox Custodian",
@@ -27,16 +54,7 @@ export const agents: Agent[] = [
     cadence: "Daily · 7am CT",
     trigger: "scheduled",
     source: { kind: "github-actions", repo: "FlorenceBixby/burke-portfolio", workflow: "personal-mailbox-manager.yml" },
-  },
-  {
-    id: "correspondence-clerk",
-    title: "The Correspondence Clerk",
-    chapter: "Safety Diver",
-    description:
-      "Keeps a second personal inbox honest, sorting bills from leads from spam, and flagging anything that genuinely needs a signature.",
-    cadence: "Daily · 7am CT",
-    trigger: "scheduled",
-    source: { kind: "github-actions", repo: "FlorenceBixby/burke-portfolio", workflow: "atxruders-mailbox-manager.yml" },
+    reportsTo: "Chief of Staff",
   },
   {
     id: "calendar-cartographer",
@@ -60,12 +78,12 @@ export const agents: Agent[] = [
   },
   {
     id: "morning-digest",
-    title: "The Morning Digest",
+    title: "The Weekly Digest",
     chapter: "Deep-Sea Documentarian",
     description:
-      "A daily research briefing that reads Hacker News, GitHub, and the wider web so you don't have to, then reports back on what's actually worth knowing.",
-    cadence: "Planned",
-    trigger: "concept",
+      "A weekly research briefing that reads Hacker News, GitHub, and the wider web so you don't have to, then reports back Sunday morning on what was actually worth knowing.",
+    cadence: "Weekly · Sunday 7am CT",
+    trigger: "scheduled",
   },
   {
     id: "sailing-master",

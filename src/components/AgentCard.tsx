@@ -114,6 +114,12 @@ export default function AgentCard({ agent, index, status }: { agent: Agent; inde
         {agent.cadence}
       </p>
 
+      {agent.reportsTo && (
+        <p style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginTop: "6px" }}>
+          Reports to {agent.reportsTo}
+        </p>
+      )}
+
       {url && (
         <p style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
           View on GitHub &#8599;
